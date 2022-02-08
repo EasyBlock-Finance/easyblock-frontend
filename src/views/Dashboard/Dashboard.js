@@ -117,6 +117,7 @@ export default function Dashboard() {
     const [sharePrice, setSharePrice] = useState(0);
     const [totalBalance, setTotalBalance] = useState(1);
     const [notClaimedRewards, setNotClaimedReards] = useState(0);
+    const [notClaimedStrong, setNotClaimedStrong] = useState(0);
     const [shareHolderCount, setShareHolderCount] = useState(0);
     const [newInvestments, setNewInvestments] = useState(0);
 
@@ -200,17 +201,20 @@ export default function Dashboard() {
     async function getNeededAmountData() {
         let balance = 0;
         let notClaimedReward = 0;
+        let notClaimedStrong = 0;
 
         fetch('https://openapi.debank.com/v1/user/total_balance?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14').then(response => response.json()).then(data => {
                 balance += data['total_usd_value'];
                 fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
                         try {
                             notClaimedReward += data['portfolio_item_list'][0]['stats']['asset_usd_value'];
+                            notClaimedStrong += data['portfolio_item_list'][0]['detail']['token_list'][0]['amount'];
                             balance -= notClaimedReward;
                         } catch (e) {
 
                         }
                         setNotClaimedReards(notClaimedReward);
+                        setNotClaimedStrong(notClaimedStrong);
                         setTotalBalance(balance);
                         setPriceLoading(false);
                     }
@@ -720,7 +724,7 @@ export default function Dashboard() {
                                         {priceLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format((notClaimedRewards).toFixed(2))} $
+                                                {notClaimedStrong.toFixed(2)} STRONG (~{dollarUSLocale.format((notClaimedRewards).toFixed(2))}$)
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
