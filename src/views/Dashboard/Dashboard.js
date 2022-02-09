@@ -1064,7 +1064,7 @@ export default function Dashboard() {
                                     {buyError ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Transaction error occured. Please be sure you have enough USDC in your
+                                            Transaction error occured. Please be sure you have enough USDC or FTM (to cover gas fees) in your
                                             account.
                                         </Text> : null}
                                     {userDataLoading ? null : purchaseAllowance >= (sharesToBeBought * 10000000) ?
