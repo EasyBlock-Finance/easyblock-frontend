@@ -207,18 +207,30 @@ export default function Dashboard() {
 
         fetch('https://openapi.debank.com/v1/user/total_balance?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14').then(response => response.json()).then(data => {
                 balance += data['total_usd_value'];
-                fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
-                        try {
-                            notClaimedReward += data['portfolio_item_list'][0]['stats']['asset_usd_value'];
-                            notClaimedStrong += data['portfolio_item_list'][0]['detail']['token_list'][0]['amount'];
-                            balance -= notClaimedReward;
-                        } catch (e) {
+                fetch('https://openapi.debank.com/v1/user/total_balance?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B').then(response => response.json()).then(data => {
+                        balance += data['total_usd_value'];
+                        fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
+                                try {
+                                    notClaimedReward += data['portfolio_item_list'][0]['stats']['asset_usd_value'];
+                                    notClaimedStrong += data['portfolio_item_list'][0]['detail']['token_list'][0]['amount'];
+                                    fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
+                                            try {
+                                                notClaimedReward += data['portfolio_item_list'][0]['stats']['asset_usd_value'];
+                                                notClaimedStrong += data['portfolio_item_list'][0]['detail']['token_list'][0]['amount'];
+                                                balance -= notClaimedReward;
 
-                        }
-                        setNotClaimedReards(notClaimedReward);
-                        setNotClaimedStrong(notClaimedStrong);
-                        setTotalBalance(balance);
-                        setPriceLoading(false);
+                                                setTotalBalance(balance);
+                                                setNotClaimedReards(notClaimedReward);
+                                                setNotClaimedStrong(notClaimedStrong);
+                                                setPriceLoading(false);
+                                            } catch (e) {
+                                            }
+                                        }
+                                    );
+                                } catch (e) {
+                                }
+                            }
+                        );
                     }
                 );
             }
@@ -1064,7 +1076,8 @@ export default function Dashboard() {
                                     {buyError ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Transaction error occured. Please be sure you have enough USDC or FTM (to cover gas fees) in your
+                                            Transaction error occured. Please be sure you have enough USDC or FTM (to
+                                            cover gas fees) in your
                                             account.
                                         </Text> : null}
                                     {userDataLoading ? null : purchaseAllowance >= (sharesToBeBought * 10000000) ?
