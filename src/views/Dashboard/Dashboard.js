@@ -145,6 +145,7 @@ export default function Dashboard() {
     const [shareHolderLoading, setShareHolderLoading] = useState(true);
     const [priceLoading, setPriceLoading] = useState(true);
     const [showExplanation, setShowExplanation] = useState(false);
+    const [rewardDistributing, setRewardDistributing] = useState(false);
 
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
@@ -293,6 +294,7 @@ export default function Dashboard() {
             let sharePriceInUSD = parseInt(await easyBlockContract.purchaseTokensPrice(purchaseTokenAddress), 10);
             let totalNodesOwned = parseInt(await easyBlockContract.nodeCount(), 10);
             let investment = parseInt(await easyBlockContract.newInvestments("0x04068da6c83afcfa0e13ba15a6696662335d5b75"), 10);
+            let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
             console.log(typeof investment);
             console.log(investment);
 
@@ -303,6 +305,7 @@ export default function Dashboard() {
             setSharePrice(sharePriceInUSD);
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
+            setRewardDistributing(!sharePurchaseEnabled);
 
             // Deposit token contracts
             depositTokenContract = new ethers.Contract(purchaseTokenAddress, PURCHASE_TOKEN_ABI, provider);
@@ -1116,37 +1119,43 @@ export default function Dashboard() {
                                         :
                                         <Text fontSize={"md"} marginBottom={"4"}>You only need to Approve the first
                                             time you are using the protocol.</Text>}
-                                    <Button
-                                        bg={"#FFFFFF"}
-                                        p="0px"
-                                        variant="no-hover"
-                                        my={{sm: "0px", lg: "0px"}}
-                                        onClick={() => {
-                                            if (!metamaskInstalled) {
-                                                alert("Please install Metamask to use EasyBlock.");
-                                            } else if (!isConnected) {
-                                                connectWalletHandler();
-                                            } else {
-                                                buyShares(sharesToBeBought);
-                                            }
-                                        }}
-                                        paddingLeft={8}
-                                        paddingRight={8}
-                                        paddingTop={6}
-                                        paddingBottom={6}
-                                    >
-                                        {!isBuying || userDataLoading ?
-                                            <Text
-                                                fontSize="32"
-                                                color={"#3e68a4"}
-                                                fontWeight="bold"
-                                                cursor="pointer"
-                                                transition="all .5s ease"
-                                                my={{sm: "1.5rem", lg: "0px"}}
-                                            >
-                                                {purchaseAllowance >= (sharesToBeBought * 10000000) ? "Buy Shares" : "Approve"}
-                                            </Text> : <Spinner color={"#3e68a4"}/>}
-                                    </Button>
+                                    {rewardDistributing ?
+                                        <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
+                                              color={"red.400"}>
+                                            Distributing rewards. Share purchase will be re-enabled after the distribution ends.
+                                        </Text>
+                                        :
+                                        <Button
+                                            bg={"#FFFFFF"}
+                                            p="0px"
+                                            variant="no-hover"
+                                            my={{sm: "0px", lg: "0px"}}
+                                            onClick={() => {
+                                                if (!metamaskInstalled) {
+                                                    alert("Please install Metamask to use EasyBlock.");
+                                                } else if (!isConnected) {
+                                                    connectWalletHandler();
+                                                } else {
+                                                    buyShares(sharesToBeBought);
+                                                }
+                                            }}
+                                            paddingLeft={8}
+                                            paddingRight={8}
+                                            paddingTop={6}
+                                            paddingBottom={6}
+                                        >
+                                            {!isBuying || userDataLoading ?
+                                                <Text
+                                                    fontSize="32"
+                                                    color={"#3e68a4"}
+                                                    fontWeight="bold"
+                                                    cursor="pointer"
+                                                    transition="all .5s ease"
+                                                    my={{sm: "1.5rem", lg: "0px"}}
+                                                >
+                                                    {purchaseAllowance >= (sharesToBeBought * 10000000) ? "Buy Shares" : "Approve"}
+                                                </Text> : <Spinner color={"#3e68a4"}/>}
+                                        </Button>}
 
                                 </Flex>
                             </Portal>
