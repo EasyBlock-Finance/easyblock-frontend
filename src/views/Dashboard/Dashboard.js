@@ -184,7 +184,7 @@ export default function Dashboard() {
     async function getShareHolderCount() {
         let count = 0;
         let checker = 0;
-        for (let i = 1550; i < 2500; i++) {
+        for (let i = 1714; i < 2500; i++) {
             try {
                 await easyBlockContract.holders(i);
                 checker = 0;
@@ -659,7 +659,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format((2266.7521 + 13238 + 21102).toFixed(2))} $
+                                                {dollarUSLocale.format((2266.7521 + 13238 + 21102 + 17462).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -973,9 +973,9 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>February 20, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>February 25, 2022<br/>
                                         {userDataLoading ? <Spinner/> : <span
-                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 7 days.</span>}
+                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>}
                                     </Text>
 
                                 </Flex>
