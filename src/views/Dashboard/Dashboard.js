@@ -142,7 +142,6 @@ export default function Dashboard() {
     const [isBuying, setIsBuying] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [buyError, setBuyError] = useState(false);
-    const [shareHolderLoading, setShareHolderLoading] = useState(true);
     const [priceLoading, setPriceLoading] = useState(true);
     const [showExplanation, setShowExplanation] = useState(false);
     const [rewardDistributing, setRewardDistributing] = useState(false);
@@ -178,26 +177,6 @@ export default function Dashboard() {
         } catch (e) {
             alert(e.message);
         }
-    }
-
-
-    async function getShareHolderCount() {
-        let count = 0;
-        let checker = 0;
-        for (let i = 1714; i < 2500; i++) {
-            try {
-                await easyBlockContract.holders(i);
-                checker = 0;
-                count = i;
-            } catch (e) {
-                if (checker >= 3) {
-                    break;
-                }
-                checker += 1;
-            }
-        }
-        setShareHolderCount(count);
-        setShareHolderLoading(false);
     }
 
 
@@ -295,6 +274,7 @@ export default function Dashboard() {
             let totalNodesOwned = parseInt(await easyBlockContract.nodeCount(), 10);
             let investment = parseInt(await easyBlockContract.newInvestments(), 10);
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
+            let holderCount = parseInt(await easyBlockContract.holderCount(), 10);
             console.log(typeof investment);
             console.log(investment);
 
@@ -302,10 +282,12 @@ export default function Dashboard() {
             setTotalRewardsPaid(totalRewards);
             setTotalShareCount(totalShares);
             setPurchaseTokenContract(purchaseTokenAddress);
-            setSharePrice(sharePrice/1000000);
+            setSharePrice(sharePrice / 1000000);
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
+            setShareHolderCount(holderCount);
+
 
             // Deposit token contracts
             depositTokenContract = new ethers.Contract(purchaseTokenAddress, PURCHASE_TOKEN_ABI, provider);
@@ -351,7 +333,6 @@ export default function Dashboard() {
         }
 
         await getSmartContractData();
-        await getShareHolderCount();
     }, [signer]);
 
     // CONTRACT INTERACTION FUNCTIONS
@@ -374,7 +355,7 @@ export default function Dashboard() {
             if (signer != null) {
                 setIsBuying(true);
                 if (purchaseAllowance >= count * 10 * 1000000) {
-                    await easyBlockWithSigner.buyShares(purchaseTokenContract, count);
+                    await easyBlockWithSigner.buyShares(count);
                 } else {
                     await depositTokenContractWithSigner.approve(CONTRACT_ADDRESS, approvalAmount);
                 }
@@ -633,7 +614,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format((totalInvestments/1000000).toFixed(2))} $
+                                                {dollarUSLocale.format((totalInvestments / 1000000).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -659,7 +640,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format((totalRewardsPaid/1000000).toFixed(2))} $
+                                                {dollarUSLocale.format((totalRewardsPaid / 1000000).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -842,11 +823,9 @@ export default function Dashboard() {
                                         Share Holder Count
                                     </StatLabel>
                                     <Flex>
-                                        {shareHolderLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor}>
-                                                {shareHolderCount}
-                                            </StatNumber>}
+                                        <StatNumber fontSize="lg" color={textColor}>
+                                            {shareHolderCount}
+                                        </StatNumber>
                                     </Flex>
                                 </Stat>
                                 <Spacer/>
@@ -1122,7 +1101,8 @@ export default function Dashboard() {
                                     {rewardDistributing ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Distributing rewards. Share purchase will be re-enabled after the distribution ends.
+                                            Distributing rewards. Share purchase will be re-enabled after the
+                                            distribution ends.
                                         </Text>
                                         :
                                         <Button
