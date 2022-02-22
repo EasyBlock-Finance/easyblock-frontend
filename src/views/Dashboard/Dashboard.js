@@ -287,13 +287,13 @@ export default function Dashboard() {
         console.log("Get general data.");
         // Data from contract
         try {
-            let totalInvestment = parseInt(await easyBlockContract.totalInvestmentsInUSD(), 10);
-            let totalRewards = parseInt(await easyBlockContract.totalRewardsDistributedInUSD(), 10);
+            let totalInvestment = parseInt(await easyBlockContract.totalInvestment(), 10);
+            let totalRewards = parseInt(await easyBlockContract.totalRewardsDistributed(), 10);
             let totalShares = parseInt(await easyBlockContract.totalShareCount(), 10);
-            let purchaseTokenAddress = await easyBlockContract.purchaseTokens(0);
-            let sharePriceInUSD = parseInt(await easyBlockContract.purchaseTokensPrice(purchaseTokenAddress), 10);
+            let purchaseTokenAddress = await easyBlockContract.purchaseToken();
+            let sharePrice = parseInt(await easyBlockContract.getSharePrice(), 10);
             let totalNodesOwned = parseInt(await easyBlockContract.nodeCount(), 10);
-            let investment = parseInt(await easyBlockContract.newInvestments("0x04068da6c83afcfa0e13ba15a6696662335d5b75"), 10);
+            let investment = parseInt(await easyBlockContract.newInvestments(), 10);
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
             console.log(typeof investment);
             console.log(investment);
@@ -302,7 +302,7 @@ export default function Dashboard() {
             setTotalRewardsPaid(totalRewards);
             setTotalShareCount(totalShares);
             setPurchaseTokenContract(purchaseTokenAddress);
-            setSharePrice(sharePriceInUSD);
+            setSharePrice(sharePrice/1000000);
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
@@ -633,7 +633,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format(totalInvestments.toFixed(2))} $
+                                                {dollarUSLocale.format((totalInvestments/1000000).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -659,7 +659,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format((2266.7521 + 13238 + 21102 + 17462).toFixed(2))} $
+                                                {dollarUSLocale.format((totalRewardsPaid/1000000).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -1050,7 +1050,7 @@ export default function Dashboard() {
                                                     marginLeft: 32
                                                 }}><span
                                                     style={{fontWeight: 'bold'}}>Total:</span> {generalDataLoading ?
-                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice : sharePrice * sharesToBeBought}
+                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice.toFixed(2) : (sharePrice * sharesToBeBought).toFixed(2)}
                                                 </Text>
                                                 <Image
                                                     src={'/coins/UsdcLogo.png'}
