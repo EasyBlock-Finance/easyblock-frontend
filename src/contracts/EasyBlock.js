@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xd758ED01741EF1aC302C547829338c10aBD1B0Ec";
+export const CONTRACT_ADDRESS = "0x441CBCe4eC3227dF9F7ca175CCab9A8D5d57c1f2";
 export const EASYBLOCK_ABI = [{
     "inputs": [{
         "internalType": "uint256",
@@ -70,16 +70,16 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "view",
     "type": "function"
 }, {
+    "inputs": [{"internalType": "uint16", "name": "_start", "type": "uint16"}, {
+        "internalType": "uint16",
+        "name": "_end",
+        "type": "uint16"
+    }], "name": "copyFromPrevious", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+}, {
     "inputs": [{"internalType": "uint32", "name": "_start", "type": "uint32"}, {
         "internalType": "uint32",
         "name": "_end",
         "type": "uint32"
-    }], "name": "copyFromPrevious", "outputs": [], "stateMutability": "nonpayable", "type": "function"
-}, {
-    "inputs": [{"internalType": "uint256", "name": "_start", "type": "uint256"}, {
-        "internalType": "uint256",
-        "name": "_end",
-        "type": "uint256"
     }, {"internalType": "uint256", "name": "_amount", "type": "uint256"}],
     "name": "depositRewards",
     "outputs": [],
@@ -364,12 +364,6 @@ export const EASYBLOCK_ABI = [{
 }, {
     "inputs": [],
     "name": "totalSharesSold",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
-    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "name": "totalUserRewards",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"

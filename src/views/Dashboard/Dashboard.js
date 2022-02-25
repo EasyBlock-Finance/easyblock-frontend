@@ -236,10 +236,8 @@ export default function Dashboard() {
 
                 let userShares = parseInt(await easyBlockContract.shareCount(walletAddress), 10);
                 let claimableReward = parseInt(await easyBlockContract.claimableReward(walletAddress), 10);
-                let totalUserRewards = parseInt(await easyBlockContract.totalUserRewards(walletAddress), 10);
 
                 setUserShares(userShares);
-                setTotalUserRewards((totalUserRewards - claimableReward) / 1000000);
                 setUserPendingRewards(claimableReward / 1000000);
                 setIsConnected(true);
 
@@ -406,7 +404,7 @@ export default function Dashboard() {
     }
 
     usdcContract.on("Approval", async (target, spender, value, event) => {
-        if (event.event === "Approval" && target === await signer.getAddress() && spender === CONTRACT_ADDRESS) {
+        if (event.event === "Approval" && signer != null && target === await signer.getAddress() && spender === CONTRACT_ADDRESS) {
             await updateAllowance();
             setIsBuying(false);
             toast.success("Approval successful. You can buy your shares now!", {duration: 5000,});
