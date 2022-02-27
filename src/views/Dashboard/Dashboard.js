@@ -792,7 +792,7 @@ export default function Dashboard() {
                                         Share Holder Count
                                     </StatLabel>
                                     <Flex>
-                                        {shareHolderLoading ?
+                                        {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
                                                 {shareHolderCount}
@@ -851,7 +851,8 @@ export default function Dashboard() {
                                     </StatLabel>
                                     <Flex>
                                         <StatNumber fontSize="lg" color={textColor}>
-                                            {shareHolderCount}
+                                            {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
+                                            (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards).toFixed(2))}$)
                                         </StatNumber>
                                     </Flex>
                                 </Stat>
