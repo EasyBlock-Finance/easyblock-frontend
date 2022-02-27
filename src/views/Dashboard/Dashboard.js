@@ -150,7 +150,6 @@ export default function Dashboard() {
     const [isBuying, setIsBuying] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [buyError, setBuyError] = useState(false);
-    const [shareHolderLoading, setShareHolderLoading] = useState(true);
     const [priceLoading, setPriceLoading] = useState(true);
     const [showExplanation, setShowExplanation] = useState(false);
     const [rewardDistributing, setRewardDistributing] = useState(false);
@@ -186,26 +185,6 @@ export default function Dashboard() {
         } catch (e) {
             alert(e.message);
         }
-    }
-
-
-    async function getShareHolderCount() {
-        let count = 0;
-        let checker = 0;
-        for (let i = 1763; i < 2500; i++) {
-            try {
-                await easyBlockContract.holders(i);
-                checker = 0;
-                count = i;
-            } catch (e) {
-                if (checker >= 3) {
-                    break;
-                }
-                checker += 1;
-            }
-        }
-        setShareHolderCount(count);
-        setShareHolderLoading(false);
     }
 
 
@@ -261,10 +240,8 @@ export default function Dashboard() {
 
                 let userShares = parseInt(await easyBlockContract.shareCount(walletAddress), 10);
                 let claimableReward = parseInt(await easyBlockContract.claimableReward(walletAddress), 10);
-                let totalUserRewards = parseInt(await easyBlockContract.totalUserRewards(walletAddress), 10);
 
                 setUserShares(userShares);
-                setTotalUserRewards((totalUserRewards - claimableReward) / 1000000);
                 setUserPendingRewards(claimableReward / 1000000);
                 setIsConnected(true);
 
@@ -289,23 +266,26 @@ export default function Dashboard() {
     async function getSmartContractData() {
         // Data from contract
         try {
-            let totalInvestment = parseInt(await easyBlockContract.totalInvestmentsInUSD(), 10);
-            let totalRewards = parseInt(await easyBlockContract.totalRewardsDistributedInUSD(), 10);
+            let totalInvestment = parseInt(await easyBlockContract.totalInvestment(), 10);
+            let totalRewards = parseInt(await easyBlockContract.totalRewardsDistributed(), 10);
             let totalShares = parseInt(await easyBlockContract.totalShareCount(), 10);
-            let purchaseTokenAddress = await easyBlockContract.purchaseTokens(0);
-            let sharePriceInUSD = parseInt(await easyBlockContract.purchaseTokensPrice(purchaseTokenAddress), 10);
+            let purchaseTokenAddress = await easyBlockContract.purchaseToken();
+            let sharePrice = parseInt(await easyBlockContract.getSharePrice(), 10);
             let totalNodesOwned = parseInt(await easyBlockContract.nodeCount(), 10);
-            let investment = parseInt(await easyBlockContract.newInvestments("0x04068da6c83afcfa0e13ba15a6696662335d5b75"), 10);
+            let investment = parseInt(await easyBlockContract.newInvestments(), 10);
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
+            let holderCount = parseInt(await easyBlockContract.holderCount(), 10);
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards);
             setTotalShareCount(totalShares);
             setPurchaseTokenContract(purchaseTokenAddress);
-            setSharePrice(sharePriceInUSD);
+            setSharePrice(sharePrice / 1000000);
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
+            setShareHolderCount(holderCount);
+
 
             // Deposit token contracts
             depositTokenContract = new ethers.Contract(purchaseTokenAddress, PURCHASE_TOKEN_ABI, provider);
@@ -350,7 +330,6 @@ export default function Dashboard() {
         }
 
         await getSmartContractData();
-        await getShareHolderCount();
     }, [signer]);
 
     // CONTRACT INTERACTION FUNCTIONS
@@ -373,7 +352,7 @@ export default function Dashboard() {
             if (signer != null) {
                 setIsBuying(true);
                 if (purchaseAllowance >= count * 10 * 1000000) {
-                    await easyBlockWithSigner.buyShares(purchaseTokenContract, count);
+                    await easyBlockWithSigner.buyShares(count);
                 } else {
                     await depositTokenContractWithSigner.approve(CONTRACT_ADDRESS, approvalAmount);
                 }
@@ -422,7 +401,7 @@ export default function Dashboard() {
     }
 
     usdcContract.on("Approval", async (target, spender, value, event) => {
-        if (event.event === "Approval" && target === await signer.getAddress() && spender === CONTRACT_ADDRESS) {
+        if (event.event === "Approval" && signer != null && target === await signer.getAddress() && spender === CONTRACT_ADDRESS) {
             await updateAllowance();
             setIsBuying(false);
             toast.success("Approval successful. You can buy your shares now!", {duration: 5000,});
@@ -630,7 +609,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format(totalInvestments.toFixed(2))} $
+                                                {dollarUSLocale.format((totalInvestments / 1000000).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -656,7 +635,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format((2266 + 13238 + 21102 + 17462 + 13020).toFixed(2))} $
+                                                {dollarUSLocale.format((totalRewardsPaid / 1000000).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -813,7 +792,7 @@ export default function Dashboard() {
                                         Share Holder Count
                                     </StatLabel>
                                     <Flex>
-                                        {shareHolderLoading ?
+                                        {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
                                                 {shareHolderCount}
@@ -871,12 +850,10 @@ export default function Dashboard() {
                                         Total Not Claimed Revenue
                                     </StatLabel>
                                     <Flex>
-                                        {priceLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor}>
-                                                {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
-                                                (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards).toFixed(2))}$)
-                                            </StatNumber>}
+                                        <StatNumber fontSize="lg" color={textColor}>
+                                            {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
+                                            (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards).toFixed(2))}$)
+                                        </StatNumber>
                                     </Flex>
                                 </Stat>
                                 <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
@@ -1138,7 +1115,7 @@ export default function Dashboard() {
                                                     marginLeft: 32
                                                 }}><span
                                                     style={{fontWeight: 'bold'}}>Total:</span> {generalDataLoading ?
-                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice : sharePrice * sharesToBeBought}
+                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice.toFixed(2) : (sharePrice * sharesToBeBought).toFixed(2)}
                                                 </Text>
                                                 <Image
                                                     src={'/coins/UsdcLogo.png'}
