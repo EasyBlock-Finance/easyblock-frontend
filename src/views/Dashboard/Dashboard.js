@@ -1210,8 +1210,8 @@ export default function Dashboard() {
                                     {rewardDistributing ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Distributing rewards. Share purchase will be re-enabled after the
-                                            distribution ends.
+                                            Smart contract is getting updated. Share purchase will be re-enabled after the
+                                            migration ends.
                                         </Text>
                                         :
                                         <Button
