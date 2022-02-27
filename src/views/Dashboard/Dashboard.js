@@ -53,7 +53,6 @@ import {initializeFirebase} from "../../util/firebase";
 initializeFirebase();
 
 
-console.log(window.ethereum);
 let provider;
 let metamaskInstalled = false;
 if (window.ethereum != null) {
@@ -78,7 +77,12 @@ let depositTokenContractWithSigner = null;
 const dollarUSLocale = Intl.NumberFormat('en-US');
 
 export default function Dashboard() {
-    let holdersCount = 0;
+    let pastDistribution = new Date();
+    let nextDistribution = new Date("03/02/2022");
+
+    let Difference_In_Time = nextDistribution.getTime() - pastDistribution.getTime();
+    let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
     // WEB3 START
     const connectWalletHandler = async () => {
         if (!metamaskInstalled) {
@@ -86,7 +90,6 @@ export default function Dashboard() {
             return;
         }
         try {
-            console.log("Inside wallet connect handler");
             await window.ethereum.enable();
             let chainId = await provider.getNetwork();
             chainId = chainId['chainId'];
@@ -117,8 +120,13 @@ export default function Dashboard() {
     const [purchaseTokenContract, setPurchaseTokenContract] = useState("");
     const [sharePrice, setSharePrice] = useState(0);
     const [totalBalance, setTotalBalance] = useState(1);
-    const [notClaimedRewards, setNotClaimedReards] = useState(0);
-    const [notClaimedStrong, setNotClaimedStrong] = useState(0);
+    const [notClaimedRewards, setNotClaimedRewards] = useState(0);
+    // Different wallets start
+    const [wallet1Rewards, setWallet1Rewards] = useState(0);
+    const [wallet1Strong, setWallet1Strong] = useState(0);
+    const [wallet2Rewards, setWallet2Rewards] = useState(0);
+    const [wallet2Strong, setWallet2Strong] = useState(0);
+    // Different wallets end
     const [shareHolderCount, setShareHolderCount] = useState(0);
     const [newInvestments, setNewInvestments] = useState(0);
 
@@ -182,8 +190,6 @@ export default function Dashboard() {
 
     async function getNeededAmountData() {
         let balance = 0;
-        let notClaimedReward = 0;
-        let notClaimedStrong = 0;
 
         fetch('https://openapi.debank.com/v1/user/total_balance?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14').then(response => response.json()).then(data => {
                 balance += data['total_usd_value'];
@@ -191,17 +197,16 @@ export default function Dashboard() {
                         balance += data['total_usd_value'];
                         fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
                                 try {
-                                    notClaimedReward += data['portfolio_item_list'][0]['stats']['asset_usd_value'];
-                                    notClaimedStrong += data['portfolio_item_list'][0]['detail']['token_list'][0]['amount'];
+                                    // Specific wallets
+                                    setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                                    setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
                                     fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
                                             try {
-                                                notClaimedReward += data['portfolio_item_list'][0]['stats']['asset_usd_value'];
-                                                notClaimedStrong += data['portfolio_item_list'][0]['detail']['token_list'][0]['amount'];
-                                                balance -= notClaimedReward;
+                                                // Specific wallets
+                                                setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                                                setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
 
                                                 setTotalBalance(balance);
-                                                setNotClaimedReards(notClaimedReward);
-                                                setNotClaimedStrong(notClaimedStrong);
                                                 setPriceLoading(false);
                                             } catch (e) {
                                             }
@@ -218,7 +223,6 @@ export default function Dashboard() {
     }
 
     async function connectAndGetUserData() {
-        console.log("Get user data.");
         try {
             // Info about signer
             signer = provider.getSigner();
@@ -247,7 +251,6 @@ export default function Dashboard() {
                 setPurchaseAllowance(allowance);
                 setUserDataLoading(false);
 
-                console.log("Get general data finished.");
             } else {
                 setIsConnected(false);
                 setUserDataLoading(false);
@@ -261,7 +264,6 @@ export default function Dashboard() {
     }
 
     async function getSmartContractData() {
-        console.log("Get general data.");
         // Data from contract
         try {
             let totalInvestment = parseInt(await easyBlockContract.totalInvestment(), 10);
@@ -273,8 +275,6 @@ export default function Dashboard() {
             let investment = parseInt(await easyBlockContract.newInvestments(), 10);
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
             let holderCount = parseInt(await easyBlockContract.holderCount(), 10);
-            console.log(typeof investment);
-            console.log(investment);
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards);
@@ -292,7 +292,6 @@ export default function Dashboard() {
 
             // UI Change
             setGeneralDataLoading(false);
-            console.log("Get general data finished.");
 
             await connectAndGetUserData()
         } catch (e) {
@@ -379,9 +378,7 @@ export default function Dashboard() {
         }
     });
     easyBlockContract.on("Investment", async (shareCount, price, address, event) => {
-            console.log("Investment event");
             if (event.event === "Investment" && address === await signer.getAddress()) {
-                console.log("Investment event | if condition");
                 setGeneralDataLoading(true);
                 setUserDataLoading(true);
                 // await getSmartContractData();
@@ -704,7 +701,8 @@ export default function Dashboard() {
                     </Card>
                     */}
                 </SimpleGrid>
-                <SimpleGrid columns={{sm: 1, md: 2, xl: 5}} spacing="12px" paddingLeft={0} paddingRight={0}>
+                <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="12px" paddingLeft={0} paddingRight={0}
+                            marginBottom={4}>
                     <Card minH="83px">
                         <CardBody>
                             <Flex flexDirection="row" align="center" justify="center" w="100%">
@@ -739,40 +737,13 @@ export default function Dashboard() {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Not Claimed Revenue
-                                    </StatLabel>
-                                    <Flex>
-                                        {priceLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor}>
-                                                {notClaimedStrong.toFixed(2)} STRONG
-                                                (~{dollarUSLocale.format((notClaimedRewards).toFixed(2))}$)
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
                                         Capital Waiting To Be Invested
                                     </StatLabel>
                                     <Flex>
                                         {priceLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format((totalBalance + newInvestments).toFixed(2))} $
+                                                {dollarUSLocale.format((totalBalance + newInvestments - wallet1Rewards - wallet2Rewards).toFixed(2))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -792,13 +763,13 @@ export default function Dashboard() {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Till Next Node
+                                        Until Next Node
                                     </StatLabel>
                                     <Flex>
                                         {priceLoading || generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {((totalBalance + newInvestments) / (strongPrice * 10) * 100).toFixed(0)} %
+                                                {((totalBalance + newInvestments - wallet1Rewards - wallet2Rewards) / (strongPrice * 10) * 100).toFixed(0)} %
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -821,9 +792,11 @@ export default function Dashboard() {
                                         Share Holder Count
                                     </StatLabel>
                                     <Flex>
-                                        <StatNumber fontSize="lg" color={textColor}>
-                                            {shareHolderCount}
-                                        </StatNumber>
+                                        {shareHolderLoading ?
+                                            <Spinner/> :
+                                            <StatNumber fontSize="lg" color={textColor}>
+                                                {shareHolderCount}
+                                            </StatNumber>}
                                     </Flex>
                                 </Stat>
                                 <Spacer/>
@@ -861,6 +834,89 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                     */}
+                </SimpleGrid>
+                <SimpleGrid columns={{sm: 1, md: 3, xl: 3}} spacing="12px" paddingLeft={0} paddingRight={0}
+                            marginBottom={4}>
+                    <Card minH="83px">
+                        <CardBody>
+                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                <Stat me="auto">
+                                    <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                        pb=".1rem"
+                                    >
+                                        Total Not Claimed Revenue
+                                    </StatLabel>
+                                    <Flex>
+                                        <StatNumber fontSize="lg" color={textColor}>
+                                            {shareHolderCount}
+                                        </StatNumber>
+                                    </Flex>
+                                </Stat>
+                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                </IconBox>
+                            </Flex>
+                        </CardBody>
+                    </Card>
+
+                    <Card minH="83px">
+                        <CardBody>
+                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                <Stat me="auto">
+                                    <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                        pb=".1rem"
+                                    >
+                                        Wallet 1 Not Claimed Revenue
+                                    </StatLabel>
+                                    <Flex>
+                                        {priceLoading ?
+                                            <Spinner/> :
+                                            <StatNumber fontSize="lg" color={textColor}>
+                                                {(wallet1Strong).toFixed(2)} STRONG
+                                                (~{dollarUSLocale.format(wallet1Rewards.toFixed(2))}$)
+                                            </StatNumber>}
+                                    </Flex>
+                                </Stat>
+                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                </IconBox>
+                            </Flex>
+                        </CardBody>
+                    </Card>
+
+                    <Card minH="83px">
+                        <CardBody>
+                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                <Stat me="auto">
+                                    <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                        pb=".1rem"
+                                    >
+                                        Wallet 2 Not Claimed Revenue
+                                    </StatLabel>
+                                    <Flex>
+                                        {priceLoading ?
+                                            <Spinner/> :
+                                            <StatNumber fontSize="lg" color={textColor}>
+                                                {(wallet2Strong).toFixed(2)} STRONG
+                                                (~{dollarUSLocale.format(wallet2Rewards.toFixed(2))}$)
+                                            </StatNumber>}
+                                    </Flex>
+                                </Stat>
+                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                </IconBox>
+                            </Flex>
+                        </CardBody>
+                    </Card>
                 </SimpleGrid>
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.8fr 1.2fr"}}
@@ -904,12 +960,12 @@ export default function Dashboard() {
                                                         fontWeight="bold"
                                                         pb=".1rem"
                                                     >
-                                                        Current Revenue Not Yet Distributed (*)
+                                                        Wallet 1 Revenue <br/>(Distribution: March 2)
                                                     </StatLabel>
                                                     <Flex>
                                                         <StatNumber fontSize="lg" color={"gray.600"} fontWeight="bold">
                                                             {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((notClaimedRewards) / totalShareCount * userShares).toFixed(4)}</span>} $
+                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
                                                         </StatNumber>
                                                     </Flex>
                                                 </Stat>
@@ -919,11 +975,39 @@ export default function Dashboard() {
                                             </Flex>
                                         </CardBody>
                                     </Card>
+
+                                    <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
+                                        <CardBody>
+                                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                                <Stat me="auto">
+                                                    <StatLabel
+                                                        fontSize="sm"
+                                                        color="#3e68a4"
+                                                        fontWeight="bold"
+                                                        pb=".1rem"
+                                                    >
+                                                        Wallet 2 Revenue <br/>(Distribution: March 7)
+                                                    </StatLabel>
+                                                    <Flex>
+                                                        <StatNumber fontSize="lg" color={"gray.600"} fontWeight="bold">
+                                                            {userDataLoading ? <Spinner/> : <span>
+                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                        </StatNumber>
+                                                    </Flex>
+                                                </Stat>
+                                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
+                                                    <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
+                                                </IconBox>
+                                            </Flex>
+                                        </CardBody>
+                                    </Card>
+
                                     <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                                        (*) This is the reward accumulated from Strongblock but not yet claimed.
-                                        Rewards will be claimed & distributed every week keeping in mind the gas and
-                                        cross-chain
-                                        transfer fees.
+                                        (*) This is the reward accumulated from Strongblock but not yet claimed and
+                                        distributed.
+                                        We currently have 2 wallets holding the nodes and their rewards will be
+                                        distributed every 5 days one after another. These amounts keep growing as time
+                                        passes.
                                     </Text>
                                     <Spacer/>
 
@@ -950,9 +1034,12 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>February 25, 2022<br/>
-                                        {userDataLoading ? <Spinner/> : <span
-                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>}
+                                    }}>Next Reward Distribution:<br/>March 2, 2022<br/>
+                                        <span
+                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
+                                        <br/>
+                                        {userDataLoading ? <Spinner/> :
+                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2)} $</span>}
                                     </Text>
 
                                 </Flex>
