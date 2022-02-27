@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xf006E43534ab5B99695CCB829b66146e36402054";
+export const CONTRACT_ADDRESS = "0x6611AB7efDEb4f93F8c9029a268F5daD5305Be43";
 export const EASYBLOCK_ABI = [{
     "inputs": [{
         "internalType": "uint256",
@@ -130,6 +130,12 @@ export const EASYBLOCK_ABI = [{
 }, {
     "inputs": [],
     "name": "getMaxAmountOfSharesToBeSold",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "getSellPrice",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
@@ -342,6 +348,12 @@ export const EASYBLOCK_ABI = [{
     "name": "toggleSharePurchaseEnabled",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "totalAmountOfSellBack",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
     "type": "function"
 }, {
     "inputs": [],
