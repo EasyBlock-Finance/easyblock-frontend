@@ -1040,7 +1040,7 @@ export default function Dashboard() {
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
-                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2)} $</span>}
+                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet1Rewards) / totalShareCount * userShares) ? ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
                                     </Text>
 
                                 </Flex>
@@ -1187,7 +1187,8 @@ export default function Dashboard() {
                                     {rewardDistributing ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Smart contract is getting updated. Share purchase will be re-enabled after the
+                                            Smart contract is getting updated. Share purchase will be re-enabled after
+                                            the
                                             migration ends.
                                         </Text>
                                         :
