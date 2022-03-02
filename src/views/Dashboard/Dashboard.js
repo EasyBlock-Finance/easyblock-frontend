@@ -635,7 +635,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format((totalRewardsPaid / 1000000).toFixed(2))} $
+                                                {dollarUSLocale.format(87297)} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
