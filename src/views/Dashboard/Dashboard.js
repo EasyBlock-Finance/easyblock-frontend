@@ -124,8 +124,13 @@ export default function Dashboard() {
     // Different wallets start
     const [wallet1Rewards, setWallet1Rewards] = useState(0);
     const [wallet1Strong, setWallet1Strong] = useState(0);
+
     const [wallet2Rewards, setWallet2Rewards] = useState(0);
     const [wallet2Strong, setWallet2Strong] = useState(0);
+
+    const [wallet3Rewards, setWallet3Rewards] = useState(0);
+    const [wallet3Strong, setWallet3Strong] = useState(0);
+
     // Different wallets end
     const [shareHolderCount, setShareHolderCount] = useState(0);
     const [newInvestments, setNewInvestments] = useState(0);
@@ -198,27 +203,43 @@ export default function Dashboard() {
                 balance += data['total_usd_value'];
                 fetch('https://openapi.debank.com/v1/user/total_balance?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B').then(response => response.json()).then(data => {
                         balance += data['total_usd_value'];
-                        fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                try {
-                                    // Specific wallets
-                                    setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                    setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-                                    fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                            try {
-                                                // Specific wallets
-                                                setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                                setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                        fetch('https://openapi.debank.com/v1/user/total_balance?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe').then(response => response.json()).then(data => {
+                            balance += data['total_usd_value'];
 
-                                                setTotalBalance(balance);
-                                                setPriceLoading(false);
-                                            } catch (e) {
+                            fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
+                                    try {
+                                        // Specific wallets
+                                        setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                                        setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+
+                                        fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
+                                                try {
+                                                    // Specific wallets
+                                                    setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                                                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+
+                                                    fetch('https://openapi.debank.com/v1/user/protocol?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe&protocol_id=strongblock').then(response => response.json()).then(data => {
+                                                            try {
+                                                                // Specific wallets
+                                                                setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                                                                setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+
+                                                                setTotalBalance(balance);
+                                                                setPriceLoading(false);
+                                                            } catch (e) {
+                                                            }
+                                                        }
+                                                    );
+                                                } catch (e) {
+                                                }
                                             }
-                                        }
-                                    );
-                                } catch (e) {
+                                        );
+                                    } catch (e) {
+                                    }
                                 }
-                            }
-                        );
+                            );
+
+                        });
                     }
                 );
             }
@@ -841,7 +862,7 @@ export default function Dashboard() {
                     </Card>
                     */}
                     </SimpleGrid>
-                    <SimpleGrid columns={{sm: 1, md: 3, xl: 3}} spacing="12px" paddingLeft={0} paddingRight={0}
+                    <SimpleGrid columns={{sm: 1, md: 4, xl: 4}} spacing="12px" paddingLeft={0} paddingRight={0}
                                 marginBottom={4}>
                         <Card minH="83px">
                             <CardBody>
@@ -879,14 +900,13 @@ export default function Dashboard() {
                                             fontWeight="bold"
                                             pb=".1rem"
                                         >
-                                            Wallet 1 Not Claimed Revenue
+                                            Node Holder 1
                                         </StatLabel>
                                         <Flex>
                                             {priceLoading ?
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor}>
                                                     {(wallet1Strong).toFixed(2)} STRONG
-                                                    (~{dollarUSLocale.format(wallet1Rewards.toFixed(2))}$)
                                                 </StatNumber>}
                                         </Flex>
                                     </Stat>
@@ -907,14 +927,40 @@ export default function Dashboard() {
                                             fontWeight="bold"
                                             pb=".1rem"
                                         >
-                                            Wallet 2 Not Claimed Revenue
+                                            Node Holder 2
                                         </StatLabel>
                                         <Flex>
                                             {priceLoading ?
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor}>
                                                     {(wallet2Strong).toFixed(2)} STRONG
-                                                    (~{dollarUSLocale.format(wallet2Rewards.toFixed(2))}$)
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Node Holder 3
+                                        </StatLabel>
+                                        <Flex>
+                                            {priceLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor}>
+                                                    {(wallet3Strong).toFixed(2)} STRONG
                                                 </StatNumber>}
                                         </Flex>
                                     </Stat>
