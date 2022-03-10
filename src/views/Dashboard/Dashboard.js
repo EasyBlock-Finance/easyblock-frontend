@@ -154,6 +154,9 @@ export default function Dashboard() {
     const [showExplanation, setShowExplanation] = useState(false);
     const [rewardDistributing, setRewardDistributing] = useState(false);
 
+    const [showStatDetails, setShowStatDetails] = useState(false);
+    const [showWalletDetails, setShowWalletDetails] = useState(false);
+
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
 
@@ -635,7 +638,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format(87297+13132)} $
+                                                {dollarUSLocale.format(87297 + 13132)} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -656,18 +659,18 @@ export default function Dashboard() {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Total Shares
+                                        Estimated Yearly Revenue
                                     </StatLabel>
                                     <Flex>
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {dollarUSLocale.format(totalShareCount)}
+                                                {dollarUSLocale.format((nodesOwned * 0.091 * 365 * strongPrice).toFixed(0))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
                                 <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <AiOutlineBlock h={"48px"} w={"48px"} color={"#3e68a4"}/>
+                                    <FiDollarSign h={"48px"} w={"48px"} color={"#3e68a4"}/>
                                 </IconBox>
                             </Flex>
                         </CardBody>
@@ -701,32 +704,115 @@ export default function Dashboard() {
                     </Card>
                     */}
                 </SimpleGrid>
-                <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="12px" paddingLeft={0} paddingRight={0}
-                            marginBottom={4}>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Strong Price
-                                    </StatLabel>
-                                    <Flex>
-                                        <StatNumber fontSize="lg" color={textColor}>
-                                            {dollarUSLocale.format(strongPrice)} $
-                                        </StatNumber>
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <AiOutlineLineChart h={"36px"} w={"36px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
+                {showStatDetails ? <>
+                    <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="12px" paddingLeft={0} paddingRight={0}
+                                marginBottom={4}>
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Strong Node Price
+                                        </StatLabel>
+                                        <Flex>
+                                            <StatNumber fontSize="lg" color={textColor}>
+                                                {dollarUSLocale.format(strongPrice * 10)} $
+                                            </StatNumber>
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <AiOutlineLineChart h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Until Next Node
+                                        </StatLabel>
+                                        <Flex>
+                                            {priceLoading || generalDataLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
+                                                    {((totalBalance + newInvestments - wallet1Rewards - wallet2Rewards) / (strongPrice * 10) * 100).toFixed(0)} %
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <AiFillPieChart h={"48px"} w={"48px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Total Shares
+                                        </StatLabel>
+                                        <Flex>
+                                            {generalDataLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
+                                                    {dollarUSLocale.format(totalShareCount)}
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <AiOutlineBlock h={"48px"} w={"48px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat>
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Share Holders
+                                        </StatLabel>
+                                        <Flex>
+                                            {generalDataLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor}>
+                                                    {shareHolderCount}
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <Spacer/>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <BsFillPeopleFill h={"48px"} w={"48px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+                        {/*
                     <Card minH="83px">
                         <CardBody>
                             <Flex flexDirection="row" align="center" justify="center" w="100%">
@@ -753,172 +839,98 @@ export default function Dashboard() {
                             </Flex>
                         </CardBody>
                     </Card>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Until Next Node
-                                    </StatLabel>
-                                    <Flex>
-                                        {priceLoading || generalDataLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {((totalBalance + newInvestments - wallet1Rewards - wallet2Rewards) / (strongPrice * 10) * 100).toFixed(0)} %
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <AiFillPieChart h={"48px"} w={"48px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat>
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Share Holder Count
-                                    </StatLabel>
-                                    <Flex>
-                                        {generalDataLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor}>
-                                                {shareHolderCount}
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <Spacer/>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <BsFillPeopleFill h={"48px"} w={"48px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
-                    {/*
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Monthly Revenue <br/>/ 100 Shares
-                                    </StatLabel>
-                                    <Flex>
-                                        {generalDataLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {totalShareCount === 0 ? 0 : (nodesOwned * 3 * strongPrice / totalShareCount * 100).toFixed(2)} $
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <FiDollarSign h={"48px"} w={"48px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
                     */}
-                </SimpleGrid>
-                <SimpleGrid columns={{sm: 1, md: 3, xl: 3}} spacing="12px" paddingLeft={0} paddingRight={0}
-                            marginBottom={4}>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Total Not Claimed Revenue
-                                    </StatLabel>
-                                    <Flex>
-                                        <StatNumber fontSize="lg" color={textColor}>
-                                            {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
-                                            (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards).toFixed(2))}$)
-                                        </StatNumber>
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
-
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Wallet 1 Not Claimed Revenue
-                                    </StatLabel>
-                                    <Flex>
-                                        {priceLoading ?
-                                            <Spinner/> :
+                    </SimpleGrid>
+                    <SimpleGrid columns={{sm: 1, md: 3, xl: 3}} spacing="12px" paddingLeft={0} paddingRight={0}
+                                marginBottom={4}>
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Total Not Claimed Revenue
+                                        </StatLabel>
+                                        <Flex>
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {(wallet1Strong).toFixed(2)} STRONG
-                                                (~{dollarUSLocale.format(wallet1Rewards.toFixed(2))}$)
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
+                                                {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
+                                                (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards).toFixed(2))}$)
+                                            </StatNumber>
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
 
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Wallet 2 Not Claimed Revenue
-                                    </StatLabel>
-                                    <Flex>
-                                        {priceLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor}>
-                                                {(wallet2Strong).toFixed(2)} STRONG
-                                                (~{dollarUSLocale.format(wallet2Rewards.toFixed(2))}$)
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
-                </SimpleGrid>
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Wallet 1 Not Claimed Revenue
+                                        </StatLabel>
+                                        <Flex>
+                                            {priceLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor}>
+                                                    {(wallet1Strong).toFixed(2)} STRONG
+                                                    (~{dollarUSLocale.format(wallet1Rewards.toFixed(2))}$)
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Wallet 2 Not Claimed Revenue
+                                        </StatLabel>
+                                        <Flex>
+                                            {priceLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor}>
+                                                    {(wallet2Strong).toFixed(2)} STRONG
+                                                    (~{dollarUSLocale.format(wallet2Rewards.toFixed(2))}$)
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+                    </SimpleGrid>
+                </> : <p onClick={() => {
+                    setShowStatDetails(true)
+                }} style={{cursor: "pointer", marginTop: -8, opacity: 0.9, marginLeft: 16}}>Show More Statistics</p>}
+                {showStatDetails ? <p onClick={() => {
+                    setShowStatDetails(false)
+                }} style={{cursor: "pointer", marginTop: -8, opacity: 0.9, marginLeft: 16}}>Show Less</p> : null}
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.8fr 1.2fr"}}
                     templateRows={{md: "1fr auto", lg: "1fr"}}
@@ -976,32 +988,54 @@ export default function Dashboard() {
                                             </Flex>
                                         </CardBody>
                                     </Card>
+                                    {showWalletDetails ?
 
-                                    <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
-                                        <CardBody>
-                                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                                <Stat me="auto">
-                                                    <StatLabel
-                                                        fontSize="sm"
-                                                        color="#3e68a4"
-                                                        fontWeight="bold"
-                                                        pb=".1rem"
-                                                    >
-                                                        Wallet 2 Revenue <br/>(Distribution: March 17)
-                                                    </StatLabel>
-                                                    <Flex>
-                                                        <StatNumber fontSize="lg" color={"gray.600"} fontWeight="bold">
-                                                            {userDataLoading ? <Spinner/> : <span>
+                                        <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
+                                            <CardBody>
+                                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                                    <Stat me="auto">
+                                                        <StatLabel
+                                                            fontSize="sm"
+                                                            color="#3e68a4"
+                                                            fontWeight="bold"
+                                                            pb=".1rem"
+                                                        >
+                                                            Wallet 2 Revenue <br/>(Distribution: March 17)
+                                                        </StatLabel>
+                                                        <Flex>
+                                                            <StatNumber fontSize="lg" color={"gray.600"}
+                                                                        fontWeight="bold">
+                                                                {userDataLoading ? <Spinner/> : <span>
                                                                 {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
-                                                        </StatNumber>
-                                                    </Flex>
-                                                </Stat>
-                                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
-                                                    <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
-                                                </IconBox>
-                                            </Flex>
-                                        </CardBody>
-                                    </Card>
+                                                            </StatNumber>
+                                                        </Flex>
+                                                    </Stat>
+                                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
+                                                        <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
+                                                    </IconBox>
+                                                </Flex>
+                                            </CardBody>
+                                        </Card> : <p onClick={() => {
+                                            setShowWalletDetails(true)
+                                        }} style={{
+                                            cursor: "pointer",
+                                            marginTop: -16,
+                                            opacity: 0.9,
+                                            marginLeft: 8,
+                                            textSize: 8,
+                                            marginBottom: 16
+                                        }}>Show
+                                            Other Wallets</p>}
+                                    {showWalletDetails ? <p onClick={() => {
+                                        setShowWalletDetails(false)
+                                    }} style={{
+                                        cursor: "pointer",
+                                        marginTop: -16,
+                                        opacity: 0.9,
+                                        marginLeft: 8,
+                                        textSize: 8,
+                                        marginBottom: 16
+                                    }}>Show Less</p> : null}
 
                                     <Text fontSize="sm" color="gray.400" fontWeight="normal">
                                         (*) This is the reward accumulated from Strongblock but not yet claimed and
