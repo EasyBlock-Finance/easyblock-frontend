@@ -142,7 +142,7 @@ export default function Dashboard() {
     const [totalUserRewards, setTotalUserRewards] = useState(0);
     const [purchaseAllowance, setPurchaseAllowance] = useState(0);
 
-    const [sharesToBeBought, setSharesToBeBought] = useState(10);
+    const [sharesToBeBought, setSharesToBeBought] = useState(30);
 
     const inputBg = useColorModeValue("white", "gray.800");
 
