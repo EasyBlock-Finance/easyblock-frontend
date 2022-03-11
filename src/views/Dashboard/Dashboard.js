@@ -672,9 +672,9 @@ export default function Dashboard() {
                     <Card minH="83px">
                         <CardBody>
                             <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat>
+                                <Stat me="auto">
                                     <StatLabel
-                                        fontSize="13"
+                                        fontSize="sm"
                                         color="gray.400"
                                         fontWeight="bold"
                                         pb=".1rem"
@@ -682,16 +682,13 @@ export default function Dashboard() {
                                         Profit Distributed
                                     </StatLabel>
                                     <Flex>
-                                        {generalDataLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="md" color={textColor}>
-                                                {dollarUSLocale.format(87297 + 13132)} $
-                                            </StatNumber>}
+                                        <StatNumber fontSize="md" color={textColor}>
+                                            {dollarUSLocale.format(87297 + 13132)} $
+                                        </StatNumber>
                                     </Flex>
                                 </Stat>
-                                <Spacer/>
                                 <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <GiProfit h={"64px"} w={"64px"} color={"#3e68a4"}/>
+                                    <WalletIcon h={"36px"} w={"36px"} color={"#3e68a4"}/>
                                 </IconBox>
                             </Flex>
                         </CardBody>
@@ -884,7 +881,6 @@ export default function Dashboard() {
                                         <Flex>
                                             <StatNumber fontSize="lg" color={textColor}>
                                                 {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
-                                                (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards).toFixed(2))}$)
                                             </StatNumber>
                                         </Flex>
                                     </Stat>
@@ -905,7 +901,7 @@ export default function Dashboard() {
                                             fontWeight="bold"
                                             pb=".1rem"
                                         >
-                                            Node Holder 1
+                                            Wallet 1 Not Claimed Revenue
                                         </StatLabel>
                                         <Flex>
                                             {priceLoading ?
@@ -932,7 +928,7 @@ export default function Dashboard() {
                                             fontWeight="bold"
                                             pb=".1rem"
                                         >
-                                            Node Holder 2
+                                            Wallet 2 Not Claimed Revenue
                                         </StatLabel>
                                         <Flex>
                                             {priceLoading ?
@@ -959,7 +955,7 @@ export default function Dashboard() {
                                             fontWeight="bold"
                                             pb=".1rem"
                                         >
-                                            Node Holder 3
+                                            Wallet 3 Not Claimed Revenue
                                         </StatLabel>
                                         <Flex>
                                             {priceLoading ?
