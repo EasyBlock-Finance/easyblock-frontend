@@ -591,6 +591,32 @@ export default function Dashboard() {
                             </Flex>
                         </CardBody>
                     </Card>
+
+                    <Card minH="83px">
+                        <CardBody>
+                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                <Stat me="auto">
+                                    <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                        pb=".1rem"
+                                    >
+                                        Strong Node Price
+                                    </StatLabel>
+                                    <Flex>
+                                        <StatNumber fontSize="lg" color={textColor}>
+                                            {dollarUSLocale.format(strongPrice * 10)} $
+                                        </StatNumber>
+                                    </Flex>
+                                </Stat>
+                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                    <AiOutlineLineChart h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                </IconBox>
+                            </Flex>
+                        </CardBody>
+                    </Card>
+
                     <Card minH="83px">
                         <CardBody>
                             <Flex flexDirection="row" align="center" justify="center" w="100%">
@@ -653,7 +679,7 @@ export default function Dashboard() {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Total Revenue Distributed
+                                        Profit Distributed
                                     </StatLabel>
                                     <Flex>
                                         {generalDataLoading ?
@@ -670,32 +696,7 @@ export default function Dashboard() {
                             </Flex>
                         </CardBody>
                     </Card>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Estimated Yearly Revenue
-                                    </StatLabel>
-                                    <Flex>
-                                        {generalDataLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {dollarUSLocale.format((nodesOwned * 0.091 * 365 * strongPrice).toFixed(0))} $
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <FiDollarSign h={"48px"} w={"48px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
+
                     {/*
                     <Card minH="83px">
                         <CardBody>
@@ -738,16 +739,18 @@ export default function Dashboard() {
                                             fontWeight="bold"
                                             pb=".1rem"
                                         >
-                                            Strong Node Price
+                                            Estimated Yearly Revenue
                                         </StatLabel>
                                         <Flex>
-                                            <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format(strongPrice * 10)} $
-                                            </StatNumber>
+                                            {generalDataLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
+                                                    {dollarUSLocale.format((nodesOwned * 0.091 * 365 * strongPrice).toFixed(0))} $
+                                                </StatNumber>}
                                         </Flex>
                                     </Stat>
                                     <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                        <AiOutlineLineChart h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                        <FiDollarSign h={"48px"} w={"48px"} color={"#3e68a4"}/>
                                     </IconBox>
                                 </Flex>
                             </CardBody>
@@ -783,32 +786,6 @@ export default function Dashboard() {
                         <Card minH="83px">
                             <CardBody>
                                 <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                    <Stat me="auto">
-                                        <StatLabel
-                                            fontSize="sm"
-                                            color="gray.400"
-                                            fontWeight="bold"
-                                            pb=".1rem"
-                                        >
-                                            Total Shares
-                                        </StatLabel>
-                                        <Flex>
-                                            {generalDataLoading ?
-                                                <Spinner/> :
-                                                <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                    {dollarUSLocale.format(totalShareCount)}
-                                                </StatNumber>}
-                                        </Flex>
-                                    </Stat>
-                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                        <AiOutlineBlock h={"48px"} w={"48px"} color={"#3e68a4"}/>
-                                    </IconBox>
-                                </Flex>
-                            </CardBody>
-                        </Card>
-                        <Card minH="83px">
-                            <CardBody>
-                                <Flex flexDirection="row" align="center" justify="center" w="100%">
                                     <Stat>
                                         <StatLabel
                                             fontSize="sm"
@@ -833,6 +810,34 @@ export default function Dashboard() {
                                 </Flex>
                             </CardBody>
                         </Card>
+
+                        <Card minH="83px">
+                            <CardBody>
+                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                    <Stat me="auto">
+                                        <StatLabel
+                                            fontSize="sm"
+                                            color="gray.400"
+                                            fontWeight="bold"
+                                            pb=".1rem"
+                                        >
+                                            Total Shares
+                                        </StatLabel>
+                                        <Flex>
+                                            {generalDataLoading ?
+                                                <Spinner/> :
+                                                <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
+                                                    {dollarUSLocale.format(totalShareCount)}
+                                                </StatNumber>}
+                                        </Flex>
+                                    </Stat>
+                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                        <AiOutlineBlock h={"48px"} w={"48px"} color={"#3e68a4"}/>
+                                    </IconBox>
+                                </Flex>
+                            </CardBody>
+                        </Card>
+
                         {/*
                     <Card minH="83px">
                         <CardBody>
