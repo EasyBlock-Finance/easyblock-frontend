@@ -1124,7 +1124,7 @@ export default function Dashboard() {
                             bgPosition="center"
                             bgRepeat="no-repeat"
                             w="100%"
-                            h={{sm: "500px", lg: "400px"}}
+                            h={{sm: "340px", lg: "400px"}}
                             bgSize="cover"
                             position="relative"
                             borderRadius="15px"
