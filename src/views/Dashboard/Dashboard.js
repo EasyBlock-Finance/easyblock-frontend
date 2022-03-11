@@ -969,155 +969,11 @@ export default function Dashboard() {
                     setShowStatDetails(false)
                 }} style={{cursor: "pointer", marginTop: -8, opacity: 0.9, marginLeft: 16}}>Show Less</p> : null}
                 <Grid
-                    templateColumns={{md: "1fr", lg: "1.8fr 1.2fr"}}
+                    templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
                     templateRows={{md: "1fr auto", lg: "1fr"}}
                     my="26px"
                     gap="24px"
                 >
-                    <Card minHeight="290.5px" p="1.2rem">
-                        <CardBody w="100%">
-                            <Flex flexDirection={{sm: "column", lg: "row"}} w="100%">
-                                <Flex
-                                    flexDirection="column"
-                                    h="100%"
-                                    lineHeight="1.6"
-                                    width={{lg: "45%"}}
-                                >
-                                    <Text fontSize="sm" color="gray.400" fontWeight="bold">
-                                        Connected
-                                        Wallet: {userDataLoading ? <Spinner/> : <Text>
-                                        {
-                                            !isConnected ? "Please Connect Wallet" : userWallet}</Text>}
-                                    </Text>
-                                    <Text
-                                        fontSize="xl"
-                                        color={textColor}
-                                        fontWeight="bold"
-                                        pb=".5rem"
-                                        marginTop="8px"
-                                    >
-                                        - Shares Owned: {userDataLoading ? <Spinner/> : <span>
-                                        {userShares}</span>}
-                                    </Text>
-
-                                    <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
-                                        <CardBody>
-                                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                                <Stat me="auto">
-                                                    <StatLabel
-                                                        fontSize="sm"
-                                                        color="#3e68a4"
-                                                        fontWeight="bold"
-                                                        pb=".1rem"
-                                                    >
-                                                        Wallet 1 Revenue <br/>(Distribution: March 12)
-                                                    </StatLabel>
-                                                    <Flex>
-                                                        <StatNumber fontSize="lg" color={"gray.600"} fontWeight="bold">
-                                                            {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
-                                                        </StatNumber>
-                                                    </Flex>
-                                                </Stat>
-                                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
-                                                    <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
-                                                </IconBox>
-                                            </Flex>
-                                        </CardBody>
-                                    </Card>
-                                    {showWalletDetails ?
-
-                                        <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
-                                            <CardBody>
-                                                <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                                    <Stat me="auto">
-                                                        <StatLabel
-                                                            fontSize="sm"
-                                                            color="#3e68a4"
-                                                            fontWeight="bold"
-                                                            pb=".1rem"
-                                                        >
-                                                            Wallet 2 Revenue <br/>(Distribution: March 17)
-                                                        </StatLabel>
-                                                        <Flex>
-                                                            <StatNumber fontSize="lg" color={"gray.600"}
-                                                                        fontWeight="bold">
-                                                                {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
-                                                            </StatNumber>
-                                                        </Flex>
-                                                    </Stat>
-                                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
-                                                        <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
-                                                    </IconBox>
-                                                </Flex>
-                                            </CardBody>
-                                        </Card> : <p onClick={() => {
-                                            setShowWalletDetails(true)
-                                        }} style={{
-                                            cursor: "pointer",
-                                            marginTop: -16,
-                                            opacity: 0.9,
-                                            marginLeft: 8,
-                                            textSize: 8,
-                                            marginBottom: 16
-                                        }}>Show
-                                            Other Wallets</p>}
-                                    {showWalletDetails ? <p onClick={() => {
-                                        setShowWalletDetails(false)
-                                    }} style={{
-                                        cursor: "pointer",
-                                        marginTop: -16,
-                                        opacity: 0.9,
-                                        marginLeft: 8,
-                                        textSize: 8,
-                                        marginBottom: 16
-                                    }}>Show Less</p> : null}
-
-                                    <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                                        (*) This is the reward accumulated from Strongblock but not yet claimed and
-                                        distributed.
-                                        We currently have 2 wallets holding the nodes and their rewards will be
-                                        distributed every 5 days one after another. These amounts keep growing as time
-                                        passes.
-                                    </Text>
-                                    <Spacer/>
-
-                                </Flex>
-                                <Spacer/>
-                                <Flex
-                                    bg="#FFFFFF"
-                                    align="center"
-                                    justify="center"
-                                    borderRadius="15px"
-                                    flexDirection={"column"}
-                                    padding={4}
-                                    width={window.innerWidth < 960 ? "100%" : "50%"}
-                                >
-                                    <Image
-                                        src={'/coins/UsdcLogo.png'}
-                                        alt="chakra image"
-                                        width={100}
-                                    />
-                                    <Text style={{
-                                        marginBottom: 16,
-                                        fontWeight: "bold",
-                                        fontSize: 16,
-                                        color: "#3e68a4",
-                                        marginTop: 8,
-                                        textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>March 12, 2022<br/>
-                                        <span
-                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
-                                        <br/>
-                                        {userDataLoading ? <Spinner/> :
-                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet1Rewards) / totalShareCount * userShares) ? ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
-                                    </Text>
-
-                                </Flex>
-                            </Flex>
-                        </CardBody>
-                    </Card>
                     <Card maxHeight="600px" p="1rem">
                         <CardBody
                             p="0px"
@@ -1296,6 +1152,150 @@ export default function Dashboard() {
 
                                 </Flex>
                             </Portal>
+                        </CardBody>
+                    </Card>
+                    <Card minHeight="290.5px" p="1.2rem">
+                        <CardBody w="100%">
+                            <Flex flexDirection={{sm: "column", lg: "row"}} w="100%">
+                                <Flex
+                                    flexDirection="column"
+                                    h="100%"
+                                    lineHeight="1.6"
+                                    width={{lg: "45%"}}
+                                >
+                                    <Text fontSize="sm" color="gray.400" fontWeight="bold">
+                                        Connected
+                                        Wallet: {userDataLoading ? <Spinner/> : <Text>
+                                        {
+                                            !isConnected ? "Please Connect Wallet" : userWallet}</Text>}
+                                    </Text>
+                                    <Text
+                                        fontSize="xl"
+                                        color={textColor}
+                                        fontWeight="bold"
+                                        pb=".5rem"
+                                        marginTop="8px"
+                                    >
+                                        - Shares Owned: {userDataLoading ? <Spinner/> : <span>
+                                        {userShares}</span>}
+                                    </Text>
+
+                                    <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
+                                        <CardBody>
+                                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                                <Stat me="auto">
+                                                    <StatLabel
+                                                        fontSize="sm"
+                                                        color="#3e68a4"
+                                                        fontWeight="bold"
+                                                        pb=".1rem"
+                                                    >
+                                                        Wallet 1 Revenue <br/>(Distribution: March 12)
+                                                    </StatLabel>
+                                                    <Flex>
+                                                        <StatNumber fontSize="lg" color={"gray.600"} fontWeight="bold">
+                                                            {userDataLoading ? <Spinner/> : <span>
+                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                        </StatNumber>
+                                                    </Flex>
+                                                </Stat>
+                                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
+                                                    <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
+                                                </IconBox>
+                                            </Flex>
+                                        </CardBody>
+                                    </Card>
+                                    {showWalletDetails ?
+
+                                        <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
+                                            <CardBody>
+                                                <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                                    <Stat me="auto">
+                                                        <StatLabel
+                                                            fontSize="sm"
+                                                            color="#3e68a4"
+                                                            fontWeight="bold"
+                                                            pb=".1rem"
+                                                        >
+                                                            Wallet 2 Revenue <br/>(Distribution: March 17)
+                                                        </StatLabel>
+                                                        <Flex>
+                                                            <StatNumber fontSize="lg" color={"gray.600"}
+                                                                        fontWeight="bold">
+                                                                {userDataLoading ? <Spinner/> : <span>
+                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                            </StatNumber>
+                                                        </Flex>
+                                                    </Stat>
+                                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
+                                                        <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
+                                                    </IconBox>
+                                                </Flex>
+                                            </CardBody>
+                                        </Card> : <p onClick={() => {
+                                            setShowWalletDetails(true)
+                                        }} style={{
+                                            cursor: "pointer",
+                                            marginTop: -16,
+                                            opacity: 0.9,
+                                            marginLeft: 8,
+                                            textSize: 8,
+                                            marginBottom: 16
+                                        }}>Show
+                                            Other Wallets</p>}
+                                    {showWalletDetails ? <p onClick={() => {
+                                        setShowWalletDetails(false)
+                                    }} style={{
+                                        cursor: "pointer",
+                                        marginTop: -16,
+                                        opacity: 0.9,
+                                        marginLeft: 8,
+                                        textSize: 8,
+                                        marginBottom: 16
+                                    }}>Show Less</p> : null}
+
+                                    <Text fontSize="sm" color="gray.400" fontWeight="normal">
+                                        (*) This is the reward accumulated from Strongblock but not yet claimed and
+                                        distributed.
+                                        We currently have 2 wallets holding the nodes and their rewards will be
+                                        distributed every 5 days one after another. These amounts keep growing as time
+                                        passes.
+                                    </Text>
+                                    <Spacer/>
+
+                                </Flex>
+                                <Spacer/>
+                                <Flex
+                                    bg="#FFFFFF"
+                                    align="center"
+                                    justify="center"
+                                    borderRadius="15px"
+                                    flexDirection={"column"}
+                                    padding={4}
+                                    width={window.innerWidth < 960 ? "100%" : "50%"}
+                                >
+                                    <Image
+                                        src={'/coins/UsdcLogo.png'}
+                                        alt="chakra image"
+                                        width={100}
+                                    />
+                                    <Text style={{
+                                        marginBottom: 16,
+                                        fontWeight: "bold",
+                                        fontSize: 16,
+                                        color: "#3e68a4",
+                                        marginTop: 8,
+                                        textAlign: 'center',
+                                    }}>Next Reward Distribution:<br/>March 12, 2022<br/>
+                                        <span
+                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
+                                        <br/>
+                                        {userDataLoading ? <Spinner/> :
+                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet1Rewards) / totalShareCount * userShares) ? ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
+                                    </Text>
+
+                                </Flex>
+                            </Flex>
                         </CardBody>
                     </Card>
                 </Grid>
