@@ -78,7 +78,7 @@ const dollarUSLocale = Intl.NumberFormat('en-US');
 
 export default function Dashboard() {
     let pastDistribution = new Date();
-    let nextDistribution = new Date("03/12/2022");
+    let nextDistribution = new Date("03/17/2022");
 
     let Difference_In_Time = nextDistribution.getTime() - pastDistribution.getTime();
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -673,7 +673,7 @@ export default function Dashboard() {
                                     </StatLabel>
                                     <Flex>
                                         <StatNumber fontSize="md" color={textColor}>
-                                            {dollarUSLocale.format(87297 + 13132)} $
+                                            {dollarUSLocale.format(87297 + 13132 + 10513)} $
                                         </StatNumber>
                                     </Flex>
                                 </Stat>
@@ -1190,12 +1190,13 @@ export default function Dashboard() {
                                                         fontWeight="bold"
                                                         pb=".1rem"
                                                     >
-                                                        Wallet 1 Revenue <br/>(Distribution: March 12)
+                                                        Wallet 2 Revenue <br/>(Distribution: March 17)
                                                     </StatLabel>
                                                     <Flex>
-                                                        <StatNumber fontSize="lg" color={"gray.600"} fontWeight="bold">
+                                                        <StatNumber fontSize="lg" color={"gray.600"}
+                                                                    fontWeight="bold">
                                                             {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
                                                         </StatNumber>
                                                     </Flex>
                                                 </Stat>
@@ -1206,7 +1207,6 @@ export default function Dashboard() {
                                         </CardBody>
                                     </Card>
                                     {showWalletDetails ?
-
                                         <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
                                             <CardBody>
                                                 <Flex flexDirection="row" align="center" justify="center" w="100%">
@@ -1217,13 +1217,13 @@ export default function Dashboard() {
                                                             fontWeight="bold"
                                                             pb=".1rem"
                                                         >
-                                                            Wallet 2 Revenue <br/>(Distribution: March 17)
+                                                            Wallet 1 Revenue <br/>(Distribution: March 22)
                                                         </StatLabel>
                                                         <Flex>
                                                             <StatNumber fontSize="lg" color={"gray.600"}
                                                                         fontWeight="bold">
                                                                 {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
                                                             </StatNumber>
                                                         </Flex>
                                                     </Stat>
@@ -1232,7 +1232,9 @@ export default function Dashboard() {
                                                     </IconBox>
                                                 </Flex>
                                             </CardBody>
-                                        </Card> : <p onClick={() => {
+                                        </Card>
+
+                                        : <p onClick={() => {
                                             setShowWalletDetails(true)
                                         }} style={{
                                             cursor: "pointer",
@@ -1286,12 +1288,12 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>March 12, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>March 17, 2022<br/>
                                         <span
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
-                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet1Rewards) / totalShareCount * userShares) ? ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
+                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet2Rewards) / totalShareCount * userShares) ? ((wallet2Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
                                     </Text>
 
                                 </Flex>
