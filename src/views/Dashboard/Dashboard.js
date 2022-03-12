@@ -870,7 +870,8 @@ export default function Dashboard() {
                                         </StatLabel>
                                         <Flex>
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG
+                                                {(wallet1Strong + wallet2Strong).toFixed(2)} STRONG<br/>
+                                                (~{dollarUSLocale.format((wallet1Rewards + wallet2Rewards + wallet3Rewards).toFixed(2))}$)
                                             </StatNumber>
                                         </Flex>
                                     </Stat>
@@ -897,7 +898,8 @@ export default function Dashboard() {
                                             {priceLoading ?
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor}>
-                                                    {(wallet1Strong).toFixed(2)} STRONG
+                                                    {(wallet1Strong).toFixed(2)} STRONG<br/>
+                                                    (~{dollarUSLocale.format((wallet1Rewards).toFixed(2))}$)
                                                 </StatNumber>}
                                         </Flex>
                                     </Stat>
@@ -925,6 +927,8 @@ export default function Dashboard() {
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor}>
                                                     {(wallet2Strong).toFixed(2)} STRONG
+                                                    <br/>
+                                                    (~{dollarUSLocale.format((wallet2Rewards).toFixed(2))}$)
                                                 </StatNumber>}
                                         </Flex>
                                     </Stat>
@@ -952,6 +956,8 @@ export default function Dashboard() {
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor}>
                                                     {(wallet3Strong).toFixed(2)} STRONG
+                                                    <br/>
+                                                    (~{dollarUSLocale.format((wallet3Rewards).toFixed(2))}$)
                                                 </StatNumber>}
                                         </Flex>
                                     </Stat>
