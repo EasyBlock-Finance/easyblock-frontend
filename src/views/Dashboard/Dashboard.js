@@ -759,7 +759,7 @@ export default function Dashboard() {
                                             {priceLoading || generalDataLoading ?
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                    {((totalBalance + newInvestments - wallet1Rewards - wallet2Rewards) / (strongPrice * 10) * 100).toFixed(0)} %
+                                                    {((totalBalance + newInvestments - wallet1Rewards - wallet2Rewards - wallet3Rewards) / (strongPrice * 10) * 100).toFixed(0)} %
                                                 </StatNumber>}
                                         </Flex>
                                     </Stat>
