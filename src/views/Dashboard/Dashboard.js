@@ -756,6 +756,7 @@ export default function Dashboard() {
                                             Until Next Node
                                         </StatLabel>
                                         <Flex>
+
                                             {priceLoading || generalDataLoading ?
                                                 <Spinner/> :
                                                 <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
