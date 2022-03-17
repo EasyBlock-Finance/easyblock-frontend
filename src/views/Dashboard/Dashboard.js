@@ -78,7 +78,7 @@ const dollarUSLocale = Intl.NumberFormat('en-US');
 
 export default function Dashboard() {
     let pastDistribution = new Date();
-    let nextDistribution = new Date("03/17/2022");
+    let nextDistribution = new Date("03/22/2022");
 
     let Difference_In_Time = nextDistribution.getTime() - pastDistribution.getTime();
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -142,7 +142,7 @@ export default function Dashboard() {
     const [totalUserRewards, setTotalUserRewards] = useState(0);
     const [purchaseAllowance, setPurchaseAllowance] = useState(0);
 
-    const [sharesToBeBought, setSharesToBeBought] = useState(30);
+    const [sharesToBeBought, setSharesToBeBought] = useState(100);
 
     const inputBg = useColorModeValue("white", "gray.800");
 
@@ -487,8 +487,8 @@ export default function Dashboard() {
                             <span
                                 style={{fontWeight: 'normal', color: "#000000", fontSize: 16}}>
                             EasyBlock is a protocol running on Fantom Network which enables investors of all sizes to invest in StrongBlock Nodes. StrongBlock requires a minimum investment
-                            amount of <b>{(strongPrice * 10).toFixed(0)} $</b> and runs on Ethereum Mainnet which has really high gas-fees. These conditions make StrongBlock inaccesible for most of investors.
-                            On contrary, <b>EasyBlock</b> has a minimum investment amount of <b>10 $</b> per share and minimal gas fees. <br/>
+                            amount of <b>${(strongPrice * 10).toFixed(0)}</b> and runs on Ethereum Mainnet which has really high gas-fees. These conditions make StrongBlock inaccesible for most of investors.
+                            On contrary, <b>EasyBlock</b> has a minimum investment amount of <b>${sharePrice}</b> per share and minimal gas fees. <br/>
                             The amount generated from share sales are bridged to Ethereum Mainnet and used to purchase StrongBlock Nodes. Revenue generated from those nodes is bridged back to Fantom on optimal intervals and distributed to shareholders.
                         </span>
                         <Button
@@ -649,7 +649,7 @@ export default function Dashboard() {
                                         {generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {dollarUSLocale.format((totalInvestments / 1000000).toFixed(2))} $
+                                                {dollarUSLocale.format((totalInvestments / 1000000).toFixed(0))} $
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -673,7 +673,7 @@ export default function Dashboard() {
                                     </StatLabel>
                                     <Flex>
                                         <StatNumber fontSize="md" color={textColor}>
-                                            {dollarUSLocale.format(87297 + 13132 + 10513)} $
+                                            {dollarUSLocale.format(87297 + 13132 + 10513 + 11138)} $
                                         </StatNumber>
                                     </Flex>
                                 </Stat>
@@ -1197,13 +1197,13 @@ export default function Dashboard() {
                                                         fontWeight="bold"
                                                         pb=".1rem"
                                                     >
-                                                        Wallet 2 Revenue <br/>(Distribution: March 17)
+                                                        Wallet 1 Revenue <br/>(Distribution: March 22)
                                                     </StatLabel>
                                                     <Flex>
                                                         <StatNumber fontSize="lg" color={"gray.600"}
                                                                     fontWeight="bold">
                                                             {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
                                                         </StatNumber>
                                                     </Flex>
                                                 </Stat>
@@ -1224,13 +1224,13 @@ export default function Dashboard() {
                                                             fontWeight="bold"
                                                             pb=".1rem"
                                                         >
-                                                            Wallet 1 Revenue <br/>(Distribution: March 22)
+                                                            Wallet 2 Revenue <br/>(Distribution: March 27)
                                                         </StatLabel>
                                                         <Flex>
                                                             <StatNumber fontSize="lg" color={"gray.600"}
                                                                         fontWeight="bold">
                                                                 {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
+                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
                                                             </StatNumber>
                                                         </Flex>
                                                     </Stat>
@@ -1295,12 +1295,12 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>March 17, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>March 22, 2022<br/>
                                         <span
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
-                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet2Rewards) / totalShareCount * userShares) ? ((wallet2Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
+                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet1Rewards) / totalShareCount * userShares) ? ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
                                     </Text>
 
                                 </Flex>
