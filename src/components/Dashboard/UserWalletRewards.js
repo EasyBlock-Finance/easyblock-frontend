@@ -35,7 +35,7 @@ export default function UserWalletRewards(props) {
                             <StatNumber fontSize="lg" color={"gray.600"}
                                         fontWeight="bold">
                                 {props.userDataLoading ? <Spinner/> : <span>
-                                                                {props.totalShareCount === 0 ? 0 : calculateCurrentRewardSingle(props.reward).toFixed(2)}</span>} $
+                                                                ${props.totalShareCount === 0 ? 0 : calculateCurrentRewardSingle(props.reward).toFixed(2)}</span>}
                             </StatNumber>
                         </Flex>
                     </Stat>

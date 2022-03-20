@@ -66,7 +66,7 @@ export default function StatBox(props) {
                                 </StatLabel>
                                 <Flex>
                                     <StatNumber fontSize="lg" color={textColor}>
-                                        {dollarUSLocale.format(props.strongPrice * 10)} $
+                                        ${dollarUSLocale.format((props.strongPrice * 10).toFixed(0))}
                                     </StatNumber>
                                 </Flex>
                             </Stat>
@@ -119,7 +119,7 @@ export default function StatBox(props) {
                                     {props.generalDataLoading ?
                                         <Spinner/> :
                                         <StatNumber fontSize="lg" color={textColor}>
-                                            {dollarUSLocale.format((props.totalInvestments / 1000000).toFixed(0))} $
+                                            ${dollarUSLocale.format((props.totalInvestments / 1000000).toFixed(0))}
                                         </StatNumber>}
                                 </Flex>
                             </Stat>
@@ -143,7 +143,7 @@ export default function StatBox(props) {
                                 </StatLabel>
                                 <Flex>
                                     <StatNumber fontSize="md" color={textColor}>
-                                        {dollarUSLocale.format(87297 + 13132 + 10513 + 11138)} $
+                                        ${dollarUSLocale.format(87297 + 13132 + 10513 + 11138)}
                                     </StatNumber>
                                 </Flex>
                             </Stat>
@@ -202,7 +202,7 @@ export default function StatBox(props) {
                                         {props.generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {dollarUSLocale.format((props.nodesOwned * 0.091 * 365 * props.strongPrice).toFixed(0))} $
+                                                ${dollarUSLocale.format((props.nodesOwned * 0.091 * 365 * props.strongPrice).toFixed(0))}
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -342,7 +342,7 @@ export default function StatBox(props) {
                                     <Flex>
                                         <StatNumber fontSize="lg" color={textColor}>
                                             {(props.wallet1Strong + props.wallet2Strong).toFixed(2)} STRONG<br/>
-                                            (~{dollarUSLocale.format((props.wallet1Rewards + props.wallet2Rewards + props.wallet3Rewards).toFixed(2))}$)
+                                            (~${dollarUSLocale.format((props.wallet1Rewards + props.wallet2Rewards + props.wallet3Rewards).toFixed(2))})
                                         </StatNumber>
                                     </Flex>
                                 </Stat>
@@ -370,7 +370,7 @@ export default function StatBox(props) {
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
                                                 {(props.wallet1Strong).toFixed(2)} STRONG<br/>
-                                                (~{dollarUSLocale.format((props.wallet1Rewards).toFixed(2))}$)
+                                                (~${dollarUSLocale.format((props.wallet1Rewards).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -399,7 +399,7 @@ export default function StatBox(props) {
                                             <StatNumber fontSize="lg" color={textColor}>
                                                 {(props.wallet2Strong).toFixed(2)} STRONG
                                                 <br/>
-                                                (~{dollarUSLocale.format((props.wallet2Rewards).toFixed(2))}$)
+                                                (~${dollarUSLocale.format((props.wallet2Rewards).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -428,7 +428,7 @@ export default function StatBox(props) {
                                             <StatNumber fontSize="lg" color={textColor}>
                                                 {(props.wallet3Strong).toFixed(2)} STRONG
                                                 <br/>
-                                                (~{dollarUSLocale.format((props.wallet3Rewards).toFixed(2))}$)
+                                                (~${dollarUSLocale.format((props.wallet3Rewards).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>

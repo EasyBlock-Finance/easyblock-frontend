@@ -754,10 +754,10 @@ export default function Dashboard() {
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
                                             <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
-                                                <b>Estimated Amount:</b> {totalShareCount === 0 ? 0
+                                                <b>Estimated Amount:</b> ${totalShareCount === 0 ? 0
                                                 : calculateEstimatedRewardsSingle(wallet1Rewards) > (calculateCurrentRewardSingle(wallet1Rewards))
                                                     ? calculateEstimatedRewardsSingle(wallet1Rewards).toFixed(2)
-                                                    : (calculateCurrentRewardSingle(wallet1Rewards)).toFixed(2)} $</span>}
+                                                    : (calculateCurrentRewardSingle(wallet1Rewards)).toFixed(2)}</span>}
                                     </Text>
 
                                 </Flex>
