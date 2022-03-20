@@ -685,11 +685,15 @@ export default function Dashboard() {
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
                                                        totalShareCount={totalShareCount} userShares={userShares}
-                                                       reward={wallet1Rewards}/>
+                                                       reward={wallet1Rewards}
+                                    name={"Wallet 1"}
+                                    distributionDate={"March 22"}/>
                                     {showWalletDetails ?
                                         <UserWalletRewards userDataLoading={userDataLoading}
                                                            totalShareCount={totalShareCount} userShares={userShares}
-                                                           reward={wallet2Rewards}/>
+                                                           reward={wallet2Rewards}
+                                        name={"Wallet 2"}
+                                        distributionDate={"March 27"}/>
 
                                         : <p onClick={() => {
                                             setShowWalletDetails(true)

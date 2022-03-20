@@ -29,7 +29,7 @@ export default function UserWalletRewards(props) {
                             fontWeight="bold"
                             pb=".1rem"
                         >
-                            Wallet 2 Revenue <br/>(Distribution: March 27)
+                            {props.name} Revenue <br/>(Distribution: {props.distributionDate})
                         </StatLabel>
                         <Flex>
                             <StatNumber fontSize="lg" color={"gray.600"}
