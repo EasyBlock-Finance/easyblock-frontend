@@ -51,6 +51,7 @@ import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 import {initializeFirebase} from "../../util/firebase";
 import ExplanationBox from "../../components/Dashboard/ExplanationBox";
 import StatBox from "../../components/Dashboard/StatBox";
+import UserWalletRewards from "../../components/Dashboard/UserWalletRewards";
 
 initializeFirebase();
 
@@ -413,15 +414,6 @@ export default function Dashboard() {
         }
     );
 
-    async function updateAllowance() {
-        try {
-            let allowance = await depositTokenContractWithSigner.allowance(await signer.getAddress(), CONTRACT_ADDRESS);
-            setPurchaseAllowance(allowance);
-        } catch (e) {
-            await updateAllowance()
-        }
-    }
-
     usdcContract.on("Approval", async (target, spender, value, event) => {
         if (event.event === "Approval" && signer != null && target === await signer.getAddress() && spender === CONTRACT_ADDRESS) {
             await updateAllowance();
@@ -435,6 +427,25 @@ export default function Dashboard() {
             window.location.reload();
         }
     });
+
+    // Allowance
+    async function updateAllowance() {
+        try {
+            let allowance = await depositTokenContractWithSigner.allowance(await signer.getAddress(), CONTRACT_ADDRESS);
+            setPurchaseAllowance(allowance);
+        } catch (e) {
+            await updateAllowance()
+        }
+    }
+
+    // Reward calculations
+    function calculateCurrentRewardSingle(reward) {
+        return (reward) / totalShareCount * userShares;
+    }
+
+    function calculateEstimatedRewardsSingle(reward) {
+        return calculateCurrentRewardSingle(reward) / (10 - Difference_In_Days) * 10;
+    }
 
     return (
         <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 32}}>
@@ -457,7 +468,8 @@ export default function Dashboard() {
                          wallet1Rewards={wallet1Rewards}
                          wallet2Strong={wallet2Strong} wallet2Rewards={wallet2Rewards} wallet3Strong={wallet3Strong}
                          wallet3Rewards={wallet3Rewards} nodesOwned={nodesOwned} totalInvestments={totalInvestments}
-                         totalBalance={totalBalance} newInvestments={newInvestments} shareHolderCount={shareHolderCount} totalShareCount={totalShareCount} priceLoading={priceLoading}/>
+                         totalBalance={totalBalance} newInvestments={newInvestments} shareHolderCount={shareHolderCount}
+                         totalShareCount={totalShareCount} priceLoading={priceLoading}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
@@ -671,59 +683,13 @@ export default function Dashboard() {
                                         {userShares}</span>}
                                     </Text>
 
-                                    <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
-                                        <CardBody>
-                                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                                <Stat me="auto">
-                                                    <StatLabel
-                                                        fontSize="sm"
-                                                        color="#3e68a4"
-                                                        fontWeight="bold"
-                                                        pb=".1rem"
-                                                    >
-                                                        Wallet 1 Revenue <br/>(Distribution: March 22)
-                                                    </StatLabel>
-                                                    <Flex>
-                                                        <StatNumber fontSize="lg" color={"gray.600"}
-                                                                    fontWeight="bold">
-                                                            {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
-                                                        </StatNumber>
-                                                    </Flex>
-                                                </Stat>
-                                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
-                                                    <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
-                                                </IconBox>
-                                            </Flex>
-                                        </CardBody>
-                                    </Card>
+                                    <UserWalletRewards userDataLoading={userDataLoading}
+                                                       totalShareCount={totalShareCount} userShares={userShares}
+                                                       reward={wallet1Rewards}/>
                                     {showWalletDetails ?
-                                        <Card minH="83px" backgroundColor={"#FFFFFF"} marginBottom={"16px"}>
-                                            <CardBody>
-                                                <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                                    <Stat me="auto">
-                                                        <StatLabel
-                                                            fontSize="sm"
-                                                            color="#3e68a4"
-                                                            fontWeight="bold"
-                                                            pb=".1rem"
-                                                        >
-                                                            Wallet 2 Revenue <br/>(Distribution: March 27)
-                                                        </StatLabel>
-                                                        <Flex>
-                                                            <StatNumber fontSize="lg" color={"gray.600"}
-                                                                        fontWeight="bold">
-                                                                {userDataLoading ? <Spinner/> : <span>
-                                                                {totalShareCount === 0 ? 0 : ((wallet2Rewards) / totalShareCount * userShares).toFixed(2)}</span>} $
-                                                            </StatNumber>
-                                                        </Flex>
-                                                    </Stat>
-                                                    <IconBox as="box" h={"48px"} w={"48px"} bg={"#3e68a4"}>
-                                                        <FiDollarSign h={"48px"} w={"48px"} color={"#fff"}/>
-                                                    </IconBox>
-                                                </Flex>
-                                            </CardBody>
-                                        </Card>
+                                        <UserWalletRewards userDataLoading={userDataLoading}
+                                                           totalShareCount={totalShareCount} userShares={userShares}
+                                                           reward={wallet2Rewards}/>
 
                                         : <p onClick={() => {
                                             setShowWalletDetails(true)
@@ -748,10 +714,13 @@ export default function Dashboard() {
                                     }}>Show Less</p> : null}
 
                                     <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                                        (*) This is the reward accumulated from Strongblock but not yet claimed and
+                                        (*) This is the reward accumulated from Strongblock but not yet claimed
+                                        and
                                         distributed.
-                                        We currently have 3 wallets holding the nodes and rewards of the 2 will be
-                                        distributed every 5 days one after another. These amounts keep growing as time
+                                        We currently have 3 wallets holding the nodes and rewards of the 2 will
+                                        be
+                                        distributed every 5 days one after another. These amounts keep growing
+                                        as time
                                         passes.
                                     </Text>
                                     <Spacer/>
@@ -784,7 +753,11 @@ export default function Dashboard() {
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
-                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}><b>Estimated Amount:</b> {totalShareCount === 0 ? 0 : ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10) > ((wallet1Rewards) / totalShareCount * userShares) ? ((wallet1Rewards) / totalShareCount * userShares / (10 - Difference_In_Days) * 10).toFixed(2) : ((wallet1Rewards) / totalShareCount * userShares).toFixed(2)} $</span>}
+                                            <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
+                                                <b>Estimated Amount:</b> {totalShareCount === 0 ? 0
+                                                : calculateEstimatedRewardsSingle(wallet1Rewards) > (calculateCurrentRewardSingle(wallet1Rewards))
+                                                    ? calculateEstimatedRewardsSingle(wallet1Rewards).toFixed(2)
+                                                    : (calculateCurrentRewardSingle(wallet1Rewards)).toFixed(2)} $</span>}
                                     </Text>
 
                                 </Flex>

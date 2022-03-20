@@ -1,19 +1,12 @@
 /*eslint-disable*/
 import React, {useState} from "react";
 import {
-    Button,
     Flex,
-    Icon,
-    Link,
-    List,
-    ListItem,
     SimpleGrid, Spacer, Spinner,
     Stat,
     StatLabel,
-    StatNumber,
-    Text, useColorModeValue
+    StatNumber,useColorModeValue
 } from "@chakra-ui/react";
-import {BsArrowRight, BsChevronDown} from "react-icons/bs";
 import Card from "../Card/Card";
 import CardBody from "../Card/CardBody";
 import IconBox from "../Icons/IconBox";
