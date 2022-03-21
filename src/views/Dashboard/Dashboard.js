@@ -445,14 +445,14 @@ export default function Dashboard() {
     function calculateCurrentRewardSingle(reward) {
         reward -= 901; // average full wallet gas cost to claim
         reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
-        return (reward) / totalShareCount * userShares;
+        return (reward) / totalShareCount * userShares * 0.9;
     }
 
     function calculateEstimatedRewardsSingle(reward) {
         reward = reward / (10 - Difference_In_Days) * 10;
         reward -= 901; // average full wallet gas cost to claim
         reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
-        return (reward) / totalShareCount * userShares;
+        return (reward) / totalShareCount * userShares * 0.9;
     }
 
     return (

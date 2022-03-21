@@ -22,7 +22,7 @@ export default function UserWalletRewards(props) {
         if (reward < 0) {
             reward = 0;
         }
-        return (reward) / props.totalShareCount * props.userShares
+        return (reward) / props.totalShareCount * props.userShares * 0.9;
     }
 
     return (
