@@ -449,7 +449,10 @@ export default function Dashboard() {
     }
 
     function calculateEstimatedRewardsSingle(reward) {
-        return calculateCurrentRewardSingle(reward) / (10 - Difference_In_Days) * 10;
+        reward = reward / (10 - Difference_In_Days) * 10;
+        reward -= 901; // average full wallet gas cost to claim
+        reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
+        return (reward) / totalShareCount * userShares;
     }
 
     return (
@@ -691,16 +694,16 @@ export default function Dashboard() {
                                     <UserWalletRewards userDataLoading={userDataLoading}
                                                        totalShareCount={totalShareCount} userShares={userShares}
                                                        reward={wallet1Rewards}
-                                    name={"Wallet 1"}
-                                    distributionDate={"March 22"}
-                                    nextWallet={true}
-                                    premiumCollected={premiumCollected}/>
+                                                       name={"Wallet 1"}
+                                                       distributionDate={"March 22"}
+                                                       nextWallet={true}
+                                                       premiumCollected={premiumCollected}/>
                                     {showWalletDetails ?
                                         <UserWalletRewards userDataLoading={userDataLoading}
                                                            totalShareCount={totalShareCount} userShares={userShares}
                                                            reward={wallet2Rewards}
-                                        name={"Wallet 2"}
-                                        distributionDate={"March 27"}/>
+                                                           name={"Wallet 2"}
+                                                           distributionDate={"March 27"}/>
 
                                         : <p onClick={() => {
                                             setShowWalletDetails(true)
