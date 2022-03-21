@@ -122,6 +122,7 @@ export default function Dashboard() {
     const [sharePrice, setSharePrice] = useState(0);
     const [totalBalance, setTotalBalance] = useState(1);
     const [notClaimedRewards, setNotClaimedRewards] = useState(0);
+    const [premiumCollected, setPremiumCollected] = useState(0);
     // Different wallets start
     const [wallet1Rewards, setWallet1Rewards] = useState(0);
     const [wallet1Strong, setWallet1Strong] = useState(0);
@@ -298,6 +299,7 @@ export default function Dashboard() {
             let investment = parseInt(await easyBlockContract.newInvestments(), 10);
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
             let holderCount = parseInt(await easyBlockContract.holderCount(), 10);
+            let premiumCollected = parseInt(await easyBlockContract.premiumCollected(), 10);
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards);
@@ -306,6 +308,7 @@ export default function Dashboard() {
             setSharePrice(sharePrice / 1000000);
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
+            setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
             setShareHolderCount(holderCount);
 
@@ -440,6 +443,8 @@ export default function Dashboard() {
 
     // Reward calculations
     function calculateCurrentRewardSingle(reward) {
+        reward -= 901; // average full wallet gas cost to claim
+        reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
         return (reward) / totalShareCount * userShares;
     }
 
@@ -687,7 +692,9 @@ export default function Dashboard() {
                                                        totalShareCount={totalShareCount} userShares={userShares}
                                                        reward={wallet1Rewards}
                                     name={"Wallet 1"}
-                                    distributionDate={"March 22"}/>
+                                    distributionDate={"March 22"}
+                                    nextWallet={true}
+                                    premiumCollected={premiumCollected}/>
                                     {showWalletDetails ?
                                         <UserWalletRewards userDataLoading={userDataLoading}
                                                            totalShareCount={totalShareCount} userShares={userShares}
