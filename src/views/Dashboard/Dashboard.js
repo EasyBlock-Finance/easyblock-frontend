@@ -79,7 +79,7 @@ let depositTokenContractWithSigner = null;
 
 export default function Dashboard() {
     let pastDistribution = new Date();
-    let nextDistribution = new Date("03/22/2022");
+    let nextDistribution = new Date("03/27/2022");
 
     let Difference_In_Time = nextDistribution.getTime() - pastDistribution.getTime();
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -693,17 +693,17 @@ export default function Dashboard() {
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
                                                        totalShareCount={totalShareCount} userShares={userShares}
-                                                       reward={wallet1Rewards}
-                                                       name={"Wallet 1"}
-                                                       distributionDate={"March 22"}
+                                                       reward={wallet2Rewards}
+                                                       name={"Wallet 2"}
+                                                       distributionDate={"March 27"}
                                                        nextWallet={true}
                                                        premiumCollected={premiumCollected}/>
                                     {showWalletDetails ?
                                         <UserWalletRewards userDataLoading={userDataLoading}
                                                            totalShareCount={totalShareCount} userShares={userShares}
-                                                           reward={wallet2Rewards}
-                                                           name={"Wallet 2"}
-                                                           distributionDate={"March 27"}/>
+                                                           reward={wallet1Rewards}
+                                                           name={"Wallet 1"}
+                                                           distributionDate={"April 1"}/>
 
                                         : <p onClick={() => {
                                             setShowWalletDetails(true)
@@ -762,16 +762,16 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>March 22, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>March 27, 2022<br/>
                                         <span
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
                                             <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
                                                 <b>Estimated Amount:</b> ${totalShareCount === 0 ? 0
-                                                : calculateEstimatedRewardsSingle(wallet1Rewards) > (calculateCurrentRewardSingle(wallet1Rewards))
-                                                    ? calculateEstimatedRewardsSingle(wallet1Rewards).toFixed(2)
-                                                    : (calculateCurrentRewardSingle(wallet1Rewards)).toFixed(2)}</span>}
+                                                : calculateEstimatedRewardsSingle(wallet2Rewards) > (calculateCurrentRewardSingle(wallet2Rewards))
+                                                    ? calculateEstimatedRewardsSingle(wallet2Rewards).toFixed(2)
+                                                    : (calculateCurrentRewardSingle(wallet2Rewards)).toFixed(2)}</span>}
                                     </Text>
 
                                 </Flex>
