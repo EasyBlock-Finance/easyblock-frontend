@@ -620,8 +620,9 @@ export default function Dashboard() {
                                             </Button>
                                         </Flex>
                                         :
+                                        window.innerWidth > 960 ?
                                         <Text fontSize={"md"} marginBottom={"4"}>You only need to Approve the first
-                                            time you are using the protocol.</Text>}
+                                            time you are using the protocol.</Text> : null}
                                     {rewardDistributing ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
