@@ -341,7 +341,7 @@ export default function StatBox(props) {
                                     </StatLabel>
                                     <Flex>
                                         <StatNumber fontSize="lg" color={textColor}>
-                                            {(props.wallet1Strong + props.wallet2Strong).toFixed(2)} STRONG<br/>
+                                            {(props.wallet1Strong + props.wallet2Strong + props.wallet3Strong).toFixed(2)} STRONG<br/>
                                             (~${dollarUSLocale.format((props.wallet1Rewards + props.wallet2Rewards + props.wallet3Rewards).toFixed(2))})
                                         </StatNumber>
                                     </Flex>

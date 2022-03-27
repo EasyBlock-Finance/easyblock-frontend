@@ -740,8 +740,7 @@ export default function Dashboard() {
                                         (*) This is the reward accumulated from Strongblock but not yet claimed
                                         and
                                         distributed.
-                                        We currently have 3 wallets holding the nodes and rewards of the 2 will
-                                        be
+                                        We currently have 3 wallets holding the nodes and rewards are
                                         distributed every 5 days one after another. These amounts keep growing
                                         as time
                                         passes.
