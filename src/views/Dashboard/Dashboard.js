@@ -52,6 +52,7 @@ import {initializeFirebase} from "../../util/firebase";
 import ExplanationBox from "../../components/Dashboard/ExplanationBox";
 import StatBox from "../../components/Dashboard/StatBox";
 import UserWalletRewards from "../../components/Dashboard/UserWalletRewards";
+import SellShareBox from "../../components/Dashboard/SellShareBox";
 // Cookie
 import CookieConsent from "react-cookie-consent";
 
@@ -789,6 +790,7 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
+                <SellShareBox/>
             </Flex>
             <CookieConsent
                 location="bottom"
