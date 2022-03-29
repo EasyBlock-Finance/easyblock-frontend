@@ -96,6 +96,11 @@ export default function Footer(props) {
                 jurisdiction of residence. We are not affiliated with Strongblock and not liable for any losses which
                 could be incurred by them.
             </p>
+            <p style={{cursor: "pointer", textAlign: "center", fontSize: 14, color: "#ff7f7", marginTop: 8, textDecoration:"underline"}}><a
+                href={"https://drive.google.com/file/d/1gabHyca4TJOvfrNWvFpbWRY02bZGlzdq/view?usp=sharing"}
+                target={"_blank"}
+            >Terms of
+                Service</a></p>
         </div>
     );
 }
