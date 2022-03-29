@@ -52,6 +52,8 @@ import {initializeFirebase} from "../../util/firebase";
 import ExplanationBox from "../../components/Dashboard/ExplanationBox";
 import StatBox from "../../components/Dashboard/StatBox";
 import UserWalletRewards from "../../components/Dashboard/UserWalletRewards";
+// Cookie
+import CookieConsent from "react-cookie-consent";
 
 initializeFirebase();
 
@@ -788,6 +790,20 @@ export default function Dashboard() {
                     </Card>
                 </Grid>
             </Flex>
+            <CookieConsent
+                location="bottom"
+                buttonText="I understand"
+                style={{background: "#2B373B"}}
+                buttonStyle={{color: "#ffffff", backgroundColor: "#3e68a4", fontSize: "13px"}}
+                expires={150}
+            >
+                By using this website you agree to our use of cookies, our{" "}
+                <a href={"https://drive.google.com/file/d/1gabHyca4TJOvfrNWvFpbWRY02bZGlzdq/view"}
+                   style={{textDecoration: "underline"}} target={"_blank"}>Terms of Use</a>, and {" "}
+                <a href={"https://strongblock.com/terms-of-service.html"} style={{textDecoration: "underline"}}
+                   target={"_blank"}>Strongblock's
+                    Terms of Use</a>.
+            </CookieConsent>
         </div>
     );
 }
