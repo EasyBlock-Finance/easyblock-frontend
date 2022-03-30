@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 export default function SellShareBox(props) {
     const [sharesToBeSold, setSharesToBeSold] = useState(1);
     const [isSelling, setIsSelling] = useState(false);
+    const [isBreakdown, setIsBreakdown] = useState(false);
 
     // Listeners
     props.easyBlockContract.on("ShareSold", async (shareAmount, sellAmount, address, event) => {
@@ -24,10 +25,36 @@ export default function SellShareBox(props) {
                 shouldn't be used to make profits. It's sole purpose is to
                 give shareholder who need immediate money to exit the project. There is a 40% (which is the reason sell
                 price is lower than buy price) fee for selling shares
-                (15% goes to the developers and 25% goes to the community reward pool).</Text>
-            <Text fontSize={18}><b>Max Shares You Can Sell:</b> {props.maxSharesToSold}</Text>
-            <Text fontSize={18} marginBottom={8}><b>Sell Price:</b> ${props.sellPrice}</Text>
-            <Flex flexDirection={"column"} maxWidth={300}>
+                (15% goes to the developers and 25% goes to the community reward pool). Note that as this is an
+                experimental
+                function the fee can be changed, the feature can be improved, or removed.</Text>
+            <Text fontSize={20}><b>Max Shares You Can Sell:</b> {props.maxSharesToSold}</Text>
+            {isBreakdown ?
+                <>
+                    <div style={{height: 16}}/>
+                    <Text fontSize={14}><b>Base Share Price:</b> ${(props.sellPrice / 6 * 10).toFixed(4)}</Text>
+                    <Text fontSize={14}><b>Community Reward Pool
+                        Fee:</b> ${(props.sellPrice / 6 * 10 * 0.25).toFixed(4)}
+                    </Text>
+                    <Text fontSize={14}><b>Developer Fee:</b> ${(props.sellPrice / 6 * 10 * 0.15).toFixed(4)}
+                    </Text>
+                    <Text fontSize={24}><b>Sell Price:</b> ${props.sellPrice}</Text>
+                </>
+                :
+                <>
+                    <Text fontSize={20}><b>Sell Price:</b> ${props.sellPrice}</Text>
+                    <Text fontSize={14} onClick={() => {
+                        setIsBreakdown(true);
+                    }} style={{
+                        cursor: "pointer",
+                        marginTop: -0,
+                        opacity: 0.9,
+                        marginLeft: 0,
+                        textDecoration: "underline"
+                    }}>See
+                        fee breakdown</Text></>}
+
+            <Flex flexDirection={"column"} maxWidth={300} marginTop={8}>
                 <Flex marginBottom={4}>
                     <Text fontSize={24} fontWeight={"bold"} marginRight={4}>Share Count: </Text>
                     <Flex flex={1}/>
@@ -56,7 +83,7 @@ export default function SellShareBox(props) {
                     </InputGroup>
                 </Flex>
                 <Text fontSize={18} marginBottom={2} textAlign={"center"} width={"100%"}><b>You will
-                    receive: </b> {(sharesToBeSold * props.sellPrice).toFixed(2)} $USDC</Text>
+                    receive: </b> {(sharesToBeSold * props.sellPrice).toFixed(4)} $USDC</Text>
                 <Button
                     bg={"#FFFFFF"}
                     p="0px"
