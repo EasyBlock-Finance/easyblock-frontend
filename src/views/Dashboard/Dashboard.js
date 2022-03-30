@@ -123,7 +123,6 @@ export default function Dashboard() {
     const [nodesOwned, setNodesOwned] = useState(0);
     const [purchaseTokenContract, setPurchaseTokenContract] = useState("");
     const [sharePrice, setSharePrice] = useState(0);
-    const [totalBalance, setTotalBalance] = useState(1);
     const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
     const [notClaimedRewards, setNotClaimedRewards] = useState(0);
     const [premiumCollected, setPremiumCollected] = useState(0);
@@ -203,54 +202,52 @@ export default function Dashboard() {
 
 
     async function getNeededAmountData() {
-        let balance = 0;
+        // Current wallet's balance for till next node
+        try {
+            fetch('https://openapi.debank.com/v1/user/total_balance?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe').then(response => response.json()).then(data => {
+                setCurrentWalletBalance(data['total_usd_value']);
 
-        fetch('https://openapi.debank.com/v1/user/total_balance?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14').then(response => response.json()).then(data => {
-                balance += data['total_usd_value'];
-                fetch('https://openapi.debank.com/v1/user/total_balance?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B').then(response => response.json()).then(data => {
-                        balance += data['total_usd_value'];
-                        fetch('https://openapi.debank.com/v1/user/total_balance?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe').then(response => response.json()).then(data => {
-                            balance += data['total_usd_value'];
-                            setCurrentWalletBalance(data['total_usd_value']);
+            });
+        } catch (e) {
 
-                            fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                    try {
-                                        // Specific wallets
-                                        setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                        setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-
-                                        fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                                try {
-                                                    // Specific wallets
-                                                    setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-
-                                                    fetch('https://openapi.debank.com/v1/user/protocol?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                                            try {
-                                                                // Specific wallets
-                                                                setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                                                setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-
-                                                                setTotalBalance(balance);
-                                                                setPriceLoading(false);
-                                                            } catch (e) {
-                                                            }
-                                                        }
-                                                    );
-                                                } catch (e) {
-                                                }
-                                            }
-                                        );
-                                    } catch (e) {
-                                    }
-                                }
-                            );
-
-                        });
+        }
+        // Wallet 1
+        try {
+            fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
+                    try {
+                        // Specific wallets
+                        setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                        setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                    } catch (e) {
                     }
-                );
-            }
-        );
+                }
+            );
+        } catch (e) {
+
+        }
+        // Wallet 2
+        try {
+            fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
+                    // Specific wallets
+                    setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                }
+            );
+        } catch (e) {
+        }
+        // Wallet 3
+        try {
+            fetch('https://openapi.debank.com/v1/user/protocol?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe&protocol_id=strongblock').then(response => response.json()).then(data => {
+                    // Specific wallets
+                    setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                    setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+
+                    setPriceLoading(false);
+                }
+            );
+        } catch (e) {
+
+        }
     }
 
     async function connectAndGetUserData() {
@@ -498,9 +495,9 @@ export default function Dashboard() {
                          wallet1Rewards={wallet1Rewards}
                          wallet2Strong={wallet2Strong} wallet2Rewards={wallet2Rewards} wallet3Strong={wallet3Strong}
                          wallet3Rewards={wallet3Rewards} nodesOwned={nodesOwned} totalInvestments={totalInvestments}
-                         totalBalance={totalBalance} newInvestments={newInvestments} shareHolderCount={shareHolderCount}
+                         newInvestments={newInvestments} shareHolderCount={shareHolderCount}
                          totalShareCount={totalShareCount} priceLoading={priceLoading}
-                currentWalletBalance={currentWalletBalance}/>
+                         currentWalletBalance={currentWalletBalance}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
