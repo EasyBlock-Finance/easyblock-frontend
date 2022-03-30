@@ -403,7 +403,14 @@ export default function Dashboard() {
     }
 
     async function sellShares(count) {
-
+        try {
+            if (signer != null) {
+                await easyBlockWithSigner.sellBackShares(count);
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("An error has occured please check the transaction, refresh, and try again.", {duration: 5000,});
+        }
     }
 
     // CONTRACT EVENT LISTENERS
