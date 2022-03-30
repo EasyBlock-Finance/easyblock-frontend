@@ -12,7 +12,7 @@ export default function SellShareBox(props) {
     props.easyBlockContract.on("ShareSold", async (shareAmount, sellAmount, address, event) => {
             if (event.event === "ShareSold" && address === await props.signer.getAddress()) {
                 setSharesToBeSold(1);
-                isSelling(false);
+                setIsSelling(false);
                 window.location.reload();
                 toast.success("Shares sold successfully. Your balance will be updated soon.", {duration: 5000,});
             }
