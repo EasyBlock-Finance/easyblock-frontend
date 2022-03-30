@@ -124,6 +124,7 @@ export default function Dashboard() {
     const [purchaseTokenContract, setPurchaseTokenContract] = useState("");
     const [sharePrice, setSharePrice] = useState(0);
     const [totalBalance, setTotalBalance] = useState(1);
+    const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
     const [notClaimedRewards, setNotClaimedRewards] = useState(0);
     const [premiumCollected, setPremiumCollected] = useState(0);
     const [maxSharesToBeSold, setMaxSharesToBeSold] = useState(0);
@@ -210,6 +211,7 @@ export default function Dashboard() {
                         balance += data['total_usd_value'];
                         fetch('https://openapi.debank.com/v1/user/total_balance?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe').then(response => response.json()).then(data => {
                             balance += data['total_usd_value'];
+                            setCurrentWalletBalance(data['total_usd_value']);
 
                             fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
                                     try {
@@ -497,7 +499,8 @@ export default function Dashboard() {
                          wallet2Strong={wallet2Strong} wallet2Rewards={wallet2Rewards} wallet3Strong={wallet3Strong}
                          wallet3Rewards={wallet3Rewards} nodesOwned={nodesOwned} totalInvestments={totalInvestments}
                          totalBalance={totalBalance} newInvestments={newInvestments} shareHolderCount={shareHolderCount}
-                         totalShareCount={totalShareCount} priceLoading={priceLoading}/>
+                         totalShareCount={totalShareCount} priceLoading={priceLoading}
+                currentWalletBalance={currentWalletBalance}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}

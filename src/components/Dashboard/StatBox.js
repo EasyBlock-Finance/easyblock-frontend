@@ -5,7 +5,7 @@ import {
     SimpleGrid, Spacer, Spinner,
     Stat,
     StatLabel,
-    StatNumber,useColorModeValue
+    StatNumber, useColorModeValue
 } from "@chakra-ui/react";
 import Card from "../Card/Card";
 import CardBody from "../Card/CardBody";
@@ -230,7 +230,7 @@ export default function StatBox(props) {
                                         {props.generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {((props.totalBalance + props.newInvestments - props.wallet1Rewards - props.wallet2Rewards - props.wallet3Rewards) / (props.strongPrice * 10) * 100).toFixed(0)} %
+                                                {((props.currentWalletBalance + props.newInvestments - props.wallet3Rewards) / (props.strongPrice * 10) * 100).toFixed(0)} %
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
