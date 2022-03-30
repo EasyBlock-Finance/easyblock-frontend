@@ -126,6 +126,8 @@ export default function Dashboard() {
     const [totalBalance, setTotalBalance] = useState(1);
     const [notClaimedRewards, setNotClaimedRewards] = useState(0);
     const [premiumCollected, setPremiumCollected] = useState(0);
+    const [maxSharesToBeSold, setMaxSharesToBeSold] = useState(0);
+    const [sellPrice, setSellPrice] = useState(0);
     // Different wallets start
     const [wallet1Rewards, setWallet1Rewards] = useState(0);
     const [wallet1Strong, setWallet1Strong] = useState(0);
@@ -303,6 +305,8 @@ export default function Dashboard() {
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
             let holderCount = parseInt(await easyBlockContract.holderCount(), 10);
             let premiumCollected = parseInt(await easyBlockContract.premiumCollected(), 10);
+            let maxSharesToSold = parseInt(await easyBlockContract.getMaxAmountOfSharesToBeSold(), 10);
+            let sellPrice = parseInt(await easyBlockContract.getSellPrice(), 10);
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards);
@@ -314,6 +318,8 @@ export default function Dashboard() {
             setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
             setShareHolderCount(holderCount);
+            setMaxSharesToBeSold(maxSharesToSold);
+            setSellPrice(sellPrice / 1000000); // USDC has 6 decimals
 
 
             // Deposit token contracts
@@ -394,6 +400,10 @@ export default function Dashboard() {
             setIsBuying(false);
             setBuyError(true);
         }
+    }
+
+    async function sellShares(count) {
+
     }
 
     // CONTRACT EVENT LISTENERS
@@ -790,7 +800,12 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
-                <SellShareBox/>
+                {(isConnected && userShares !== 0) ?
+                    <SellShareBox maxSharesToSold={maxSharesToBeSold} sellPrice={sellPrice}
+                                  sellShares={async (count) => await sellShares(count)}
+                                  userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
+                                  signer={signer}/> : null}
+
             </Flex>
             <CookieConsent
                 location="bottom"
