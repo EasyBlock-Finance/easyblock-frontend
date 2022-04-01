@@ -143,7 +143,7 @@ export default function StatBox(props) {
                                 </StatLabel>
                                 <Flex>
                                     <StatNumber fontSize="md" color={textColor}>
-                                        ${dollarUSLocale.format(87297 + 13132 + 10513 + 11138 + 13209 + 10098)}
+                                        ${dollarUSLocale.format(87297 + 13132 + 10513 + 11138 + 13209 + 10098 + 8747)}
                                     </StatNumber>
                                 </Flex>
                             </Stat>
