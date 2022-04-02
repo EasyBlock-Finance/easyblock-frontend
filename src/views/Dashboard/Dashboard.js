@@ -52,6 +52,7 @@ import {initializeFirebase} from "../../util/firebase";
 import ExplanationBox from "../../components/Dashboard/ExplanationBox";
 import StatBox from "../../components/Dashboard/StatBox";
 import UserWalletRewards from "../../components/Dashboard/UserWalletRewards";
+import SellShareBox from "../../components/Dashboard/SellShareBox";
 // Cookie
 import CookieConsent from "react-cookie-consent";
 
@@ -122,9 +123,11 @@ export default function Dashboard() {
     const [nodesOwned, setNodesOwned] = useState(0);
     const [purchaseTokenContract, setPurchaseTokenContract] = useState("");
     const [sharePrice, setSharePrice] = useState(0);
-    const [totalBalance, setTotalBalance] = useState(1);
+    const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
     const [notClaimedRewards, setNotClaimedRewards] = useState(0);
     const [premiumCollected, setPremiumCollected] = useState(0);
+    const [maxSharesToBeSold, setMaxSharesToBeSold] = useState(0);
+    const [sellPrice, setSellPrice] = useState(0);
     // Different wallets start
     const [wallet1Rewards, setWallet1Rewards] = useState(0);
     const [wallet1Strong, setWallet1Strong] = useState(0);
@@ -199,51 +202,44 @@ export default function Dashboard() {
 
 
     async function getNeededAmountData() {
-        let balance = 0;
+        // Current wallet's balance for till next node
+        fetch('https://openapi.debank.com/v1/user/total_balance?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe').then(response => response.json()).then(data => {
+            try {
+                setCurrentWalletBalance(data['total_usd_value']);
+            } catch (e) {
+            }
 
-        fetch('https://openapi.debank.com/v1/user/total_balance?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14').then(response => response.json()).then(data => {
-                balance += data['total_usd_value'];
-                fetch('https://openapi.debank.com/v1/user/total_balance?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B').then(response => response.json()).then(data => {
-                        balance += data['total_usd_value'];
-                        fetch('https://openapi.debank.com/v1/user/total_balance?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe').then(response => response.json()).then(data => {
-                            balance += data['total_usd_value'];
+        });
+        // Wallet 1
+        fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
+                try {
+                    // Specific wallets
+                    setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                    setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                } catch (e) {
+                }
+            }
+        );
+        // Wallet 2
+        fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
+                try {
+                    // Specific wallets
+                    setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                } catch (e) {
+                }
+            }
+        );
+        // Wallet 3
+        fetch('https://openapi.debank.com/v1/user/protocol?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe&protocol_id=strongblock').then(response => response.json()).then(data => {
+                try {
+                    // Specific wallets
+                    setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
+                    setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
 
-                            fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                    try {
-                                        // Specific wallets
-                                        setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                        setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-
-                                        fetch('https://openapi.debank.com/v1/user/protocol?id=0xeB1b78C06510566a9E50e760B9F5aFE788ca5E6B&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                                try {
-                                                    // Specific wallets
-                                                    setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-
-                                                    fetch('https://openapi.debank.com/v1/user/protocol?id=0xc73D10A7A1dBD3dea1AAA5a32Bf03D72DFCBFDBe&protocol_id=strongblock').then(response => response.json()).then(data => {
-                                                            try {
-                                                                // Specific wallets
-                                                                setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                                                                setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
-
-                                                                setTotalBalance(balance);
-                                                                setPriceLoading(false);
-                                                            } catch (e) {
-                                                            }
-                                                        }
-                                                    );
-                                                } catch (e) {
-                                                }
-                                            }
-                                        );
-                                    } catch (e) {
-                                    }
-                                }
-                            );
-
-                        });
-                    }
-                );
+                    setPriceLoading(false);
+                } catch (e) {
+                }
             }
         );
     }
@@ -302,6 +298,8 @@ export default function Dashboard() {
             let sharePurchaseEnabled = await easyBlockContract.sharePurchaseEnabled();
             let holderCount = parseInt(await easyBlockContract.holderCount(), 10);
             let premiumCollected = parseInt(await easyBlockContract.premiumCollected(), 10);
+            let maxSharesToSold = parseInt(await easyBlockContract.getMaxAmountOfSharesToBeSold(), 10);
+            let sellPrice = parseInt(await easyBlockContract.getSellPrice(), 10);
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards);
@@ -313,6 +311,8 @@ export default function Dashboard() {
             setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
             setShareHolderCount(holderCount);
+            setMaxSharesToBeSold(maxSharesToSold);
+            setSellPrice(sellPrice / 1000000); // USDC has 6 decimals
 
 
             // Deposit token contracts
@@ -392,6 +392,17 @@ export default function Dashboard() {
             toast.error("Transaction error occured. Please be sure you have enough USDC in your account.", {duration: 5000,});
             setIsBuying(false);
             setBuyError(true);
+        }
+    }
+
+    async function sellShares(count) {
+        try {
+            if (signer != null) {
+                await easyBlockWithSigner.sellBackShares(count);
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("An error has occured please check the transaction, refresh, and try again.", {duration: 5000,});
         }
     }
 
@@ -478,8 +489,9 @@ export default function Dashboard() {
                          wallet1Rewards={wallet1Rewards}
                          wallet2Strong={wallet2Strong} wallet2Rewards={wallet2Rewards} wallet3Strong={wallet3Strong}
                          wallet3Rewards={wallet3Rewards} nodesOwned={nodesOwned} totalInvestments={totalInvestments}
-                         totalBalance={totalBalance} newInvestments={newInvestments} shareHolderCount={shareHolderCount}
-                         totalShareCount={totalShareCount} priceLoading={priceLoading}/>
+                         newInvestments={newInvestments} shareHolderCount={shareHolderCount}
+                         totalShareCount={totalShareCount} priceLoading={priceLoading}
+                         currentWalletBalance={currentWalletBalance}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
@@ -789,6 +801,12 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
+                {(isConnected && userShares !== 0) ?
+                    <SellShareBox maxSharesToSold={maxSharesToBeSold} sellPrice={sellPrice}
+                                  sellShares={async (count) => await sellShares(count)}
+                                  userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
+                                  signer={signer}/> : null}
+
             </Flex>
             <CookieConsent
                 location="bottom"
