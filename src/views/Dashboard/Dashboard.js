@@ -456,12 +456,14 @@ export default function Dashboard() {
 
     // Reward calculations
     function calculateCurrentRewardSingle(reward) {
+        reward *= strongPrice;
         reward -= 901; // average full wallet gas cost to claim
         reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
         return (reward) / totalShareCount * userShares * 0.9;
     }
 
     function calculateEstimatedRewardsSingle(reward) {
+        reward *= strongPrice;
         reward = reward / (15 - Difference_In_Days) * 15;
         reward -= 901; // average full wallet gas cost to claim
         reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
@@ -709,24 +711,27 @@ export default function Dashboard() {
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
                                                        totalShareCount={totalShareCount} userShares={userShares}
-                                                       reward={wallet3Rewards}
+                                                       reward={wallet3Strong}
                                                        name={"Wallet 3"}
                                                        distributionDate={"April 11"}
+                                                       strongPrice={strongPrice}
                                                        nextWallet={true}
                                                        premiumCollected={premiumCollected}/>
                                     {showWalletDetails ?
                                         <>
                                             <UserWalletRewards userDataLoading={userDataLoading}
                                                                totalShareCount={totalShareCount} userShares={userShares}
-                                                               reward={wallet1Rewards}
+                                                               reward={wallet1Strong}
                                                                name={"Wallet 1"}
                                                                distributionDate={"April 16"}
+                                                               strongPrice={strongPrice}
                                             />
                                             <UserWalletRewards userDataLoading={userDataLoading}
                                                                totalShareCount={totalShareCount} userShares={userShares}
-                                                               reward={wallet2Rewards}
+                                                               reward={wallet2Strong}
                                                                name={"Wallet 2"}
                                                                distributionDate={"April 21"}
+                                                               strongPrice={strongPrice}
                                             /></>
                                         : <p onClick={() => {
                                             setShowWalletDetails(true)
@@ -791,9 +796,9 @@ export default function Dashboard() {
                                         {userDataLoading ? <Spinner/> :
                                             <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
                                                 <b>Estimated Amount:</b> ${totalShareCount === 0 ? 0
-                                                : calculateEstimatedRewardsSingle(wallet3Rewards) > (calculateCurrentRewardSingle(wallet3Rewards))
-                                                    ? calculateEstimatedRewardsSingle(wallet3Rewards).toFixed(2)
-                                                    : (calculateCurrentRewardSingle(wallet3Rewards)).toFixed(2)}</span>}
+                                                : calculateEstimatedRewardsSingle(wallet3Strong) > (calculateCurrentRewardSingle(wallet3Strong))
+                                                    ? calculateEstimatedRewardsSingle(wallet3Strong).toFixed(2)
+                                                    : (calculateCurrentRewardSingle(wallet3Strong)).toFixed(2)}</span>}
                                     </Text>
 
                                 </Flex>

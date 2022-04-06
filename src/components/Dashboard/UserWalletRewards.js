@@ -16,7 +16,7 @@ import {FiDollarSign} from "react-icons/fi";
 export default function UserWalletRewards(props) {
     function calculateCurrentRewardSingle(reward) {
         reward -= 901; // average full wallet gas cost to claim
-        if(typeof props.nextWallet !== "undefined" && props.nextWallet !== null && props.nextWallet) {
+        if (typeof props.nextWallet !== "undefined" && props.nextWallet !== null && props.nextWallet) {
             reward += props.premiumCollected;
         }
         if (reward < 0) {
@@ -42,7 +42,7 @@ export default function UserWalletRewards(props) {
                             <StatNumber fontSize="lg" color={"gray.600"}
                                         fontWeight="bold">
                                 {props.userDataLoading ? <Spinner/> : <span>
-                                                                ${props.totalShareCount === 0 ? 0 : calculateCurrentRewardSingle(props.reward).toFixed(2)}</span>}
+                                                                ${props.totalShareCount === 0 ? 0 : calculateCurrentRewardSingle(props.reward * props.strongPrice).toFixed(2)}</span>}
                             </StatNumber>
                         </Flex>
                     </Stat>
