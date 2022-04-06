@@ -341,8 +341,8 @@ export default function StatBox(props) {
                                     </StatLabel>
                                     <Flex>
                                         <StatNumber fontSize="lg" color={textColor}>
-                                            {(props.wallet1Strong + props.wallet2Strong + props.wallet3Strong).toFixed(2)} STRONG<br/>
-                                            (~${dollarUSLocale.format((props.wallet1Rewards + props.wallet2Rewards + props.wallet3Rewards).toFixed(2))})
+                                            {(props.wallet1Strong + props.wallet2Strong + props.wallet3Strong).toFixed(2)} STRNGR<br/>
+                                            (~${dollarUSLocale.format(((props.wallet1Strong + props.wallet2Strong + props.wallet3Strong) * props.strongPrice).toFixed(2))})
                                         </StatNumber>
                                     </Flex>
                                 </Stat>
@@ -369,8 +369,8 @@ export default function StatBox(props) {
                                         {props.priceLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {(props.wallet1Strong).toFixed(2)} STRONG<br/>
-                                                (~${dollarUSLocale.format((props.wallet1Rewards).toFixed(2))})
+                                                {(props.wallet1Strong).toFixed(2)} STRNGR<br/>
+                                                (~${dollarUSLocale.format((props.wallet1Strong * props.strongPrice).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -397,9 +397,9 @@ export default function StatBox(props) {
                                         {props.priceLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {(props.wallet2Strong).toFixed(2)} STRONG
+                                                {(props.wallet2Strong).toFixed(2)} STRNGR
                                                 <br/>
-                                                (~${dollarUSLocale.format((props.wallet2Rewards).toFixed(2))})
+                                                (~${dollarUSLocale.format((props.wallet2Strong * props.strongPrice).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
@@ -426,9 +426,9 @@ export default function StatBox(props) {
                                         {props.priceLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor}>
-                                                {(props.wallet3Strong).toFixed(2)} STRONG
+                                                {(props.wallet3Strong).toFixed(2)} STRNGR
                                                 <br/>
-                                                (~${dollarUSLocale.format((props.wallet3Rewards).toFixed(2))})
+                                                (~${dollarUSLocale.format((props.wallet3Strong * props.strongPrice).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>

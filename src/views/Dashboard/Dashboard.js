@@ -343,8 +343,8 @@ export default function Dashboard() {
         }
         try {
             // Strong price from coin gecko
-            fetch('https://api.coingecko.com/api/v3/coins/strong').then(response => response.json()).then(data => {
-                    let price = data.market_data.current_price.usd;
+            fetch('https://api.dexscreener.io/latest/dex/pairs/ethereum/0x453a43e2bf3080f7a23c9bb034ccdd869e306102').then(response => response.json()).then(data => {
+                    let price = data.pair.priceUsd;
                     setStrongPrice(price);
                 }
             );
