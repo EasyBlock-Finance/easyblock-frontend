@@ -143,7 +143,7 @@ export default function StatBox(props) {
                                 </StatLabel>
                                 <Flex>
                                     <StatNumber fontSize="md" color={textColor}>
-                                        ${dollarUSLocale.format(87297 + 13132 + 10513 + 11138 + 13209 + 10098 + 8747 + 9294)}
+                                        ${dollarUSLocale.format(172750)}
                                     </StatNumber>
                                 </Flex>
                             </Stat>
@@ -184,35 +184,8 @@ export default function StatBox(props) {
                     */}
             </SimpleGrid>
             {showStatDetails ? <>
-                <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="12px" paddingLeft={0} paddingRight={0}
+                <SimpleGrid columns={{sm: 1, md: 2, xl: 3}} spacing="12px" paddingLeft={0} paddingRight={0}
                             marginBottom={4}>
-                    <Card minH="83px">
-                        <CardBody>
-                            <Flex flexDirection="row" align="center" justify="center" w="100%">
-                                <Stat me="auto">
-                                    <StatLabel
-                                        fontSize="sm"
-                                        color="gray.400"
-                                        fontWeight="bold"
-                                        pb=".1rem"
-                                    >
-                                        Estimated Yearly Revenue
-                                    </StatLabel>
-                                    <Flex>
-                                        {props.generalDataLoading ?
-                                            <Spinner/> :
-                                            <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                ${dollarUSLocale.format((props.nodesOwned * 0.091 * 365 * props.strongPrice).toFixed(0))}
-                                            </StatNumber>}
-                                    </Flex>
-                                </Stat>
-                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
-                                    <FiDollarSign h={"48px"} w={"48px"} color={"#3e68a4"}/>
-                                </IconBox>
-                            </Flex>
-                        </CardBody>
-                    </Card>
-
                     <Card minH="83px">
                         <CardBody>
                             <Flex flexDirection="row" align="center" justify="center" w="100%">
