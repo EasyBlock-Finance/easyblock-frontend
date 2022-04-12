@@ -26,7 +26,7 @@ export default function ExplanationBox(props) {
                     fontSize: 20,
                     color: "#3e68a4",
                     marginTop: 0
-                }}>What is EasyBlock? <br/>
+                }}>What is EasyBlock Strong? <br/>
                 </Text>
                 <BsChevronDown h={100} w={100} color={"#000000"}
                                style={{marginLeft: 16, width: 24, height: 24, cursor: "pointer"}}

@@ -119,7 +119,7 @@ export default function AdminNavbar(props) {
                             <StatLabel fontSize="48"
                                        color="#FFFFFF"
                                        fontWeight="bold"
-                                       pb=".1rem">EasyBlock</StatLabel>
+                                       pb=".1rem">EasyBlock Strong</StatLabel>
                         </Stat> : null}
                 </Flex>
 

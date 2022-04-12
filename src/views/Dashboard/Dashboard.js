@@ -480,7 +480,7 @@ export default function Dashboard() {
                     setSigner={(newSigner) => {
                         signer = newSigner;
                     }}
-                    logoText={"EasyBlock"}
+                    logoText={"EasyBlock Strong"}
                     isConnected={isConnected}
                 />
             </Portal>
