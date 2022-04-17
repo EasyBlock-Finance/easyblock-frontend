@@ -298,7 +298,7 @@ export default function StatBox(props) {
                     </Card>
                     */}
                 </SimpleGrid>
-                <SimpleGrid columns={{sm: 1, md: 4, xl: 4}} spacing="12px" paddingLeft={0} paddingRight={0}
+                <SimpleGrid columns={{sm: 1, md: 5, xl: 5}} spacing="12px" paddingLeft={0} paddingRight={0}
                             marginBottom={4}>
                     <Card minH="83px">
                         <CardBody>
@@ -336,7 +336,7 @@ export default function StatBox(props) {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Wallet 1 Not Claimed Revenue
+                                        Wallet 1 Not Claimed
                                     </StatLabel>
                                     <Flex>
                                         {props.priceLoading ?
@@ -364,7 +364,7 @@ export default function StatBox(props) {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Wallet 2 Not Claimed Revenue
+                                        Wallet 2 Not Claimed
                                     </StatLabel>
                                     <Flex>
                                         {props.priceLoading ?
@@ -393,7 +393,7 @@ export default function StatBox(props) {
                                         fontWeight="bold"
                                         pb=".1rem"
                                     >
-                                        Wallet 3 Not Claimed Revenue
+                                        Wallet 3 Not Claimed
                                     </StatLabel>
                                     <Flex>
                                         {props.priceLoading ?
@@ -402,6 +402,35 @@ export default function StatBox(props) {
                                                 {(props.wallet3Strong).toFixed(2)} STRNGR
                                                 <br/>
                                                 (~${dollarUSLocale.format((props.wallet3Strong * props.strongPrice).toFixed(2))})
+                                            </StatNumber>}
+                                    </Flex>
+                                </Stat>
+                                <IconBox as="box" h={"48px"} w={"48px"} bg={"#FFFFFF"}>
+                                    <GiReceiveMoney h={"36px"} w={"36px"} color={"#3e68a4"}/>
+                                </IconBox>
+                            </Flex>
+                        </CardBody>
+                    </Card>
+
+                    <Card minH="83px">
+                        <CardBody>
+                            <Flex flexDirection="row" align="center" justify="center" w="100%">
+                                <Stat me="auto">
+                                    <StatLabel
+                                        fontSize="sm"
+                                        color="gray.400"
+                                        fontWeight="bold"
+                                        pb=".1rem"
+                                    >
+                                        Wallet 4 Not Claimed
+                                    </StatLabel>
+                                    <Flex>
+                                        {props.priceLoading ?
+                                            <Spinner/> :
+                                            <StatNumber fontSize="lg" color={textColor}>
+                                                {(props.wallet4Strong).toFixed(2)} STRNGR
+                                                <br/>
+                                                (~${dollarUSLocale.format((props.wallet4Strong * props.strongPrice).toFixed(2))})
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>

@@ -138,6 +138,8 @@ export default function Dashboard() {
     const [wallet3Rewards, setWallet3Rewards] = useState(0);
     const [wallet3Strong, setWallet3Strong] = useState(0);
 
+    const [wallet4Strong, setWallet4Strong] = useState(0);
+
     // Different wallets end
     const [shareHolderCount, setShareHolderCount] = useState(0);
     const [newInvestments, setNewInvestments] = useState(0);
@@ -236,6 +238,17 @@ export default function Dashboard() {
                     // Specific wallets
                     setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
                     setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+
+                    setPriceLoading(false);
+                } catch (e) {
+                }
+            }
+        );
+        // Wallet 4
+        fetch('https://openapi.debank.com/v1/user/protocol?id=0xeb5e4368B3a804b86270f26D01f3E8208bE32560&protocol_id=strongblock').then(response => response.json()).then(data => {
+                try {
+                    // Specific wallets
+                    setWallet4Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
 
                     setPriceLoading(false);
                 } catch (e) {
@@ -493,7 +506,8 @@ export default function Dashboard() {
                          wallet3Rewards={wallet3Rewards} nodesOwned={nodesOwned} totalInvestments={totalInvestments}
                          newInvestments={newInvestments} shareHolderCount={shareHolderCount}
                          totalShareCount={totalShareCount} priceLoading={priceLoading}
-                         currentWalletBalance={currentWalletBalance}/>
+                         currentWalletBalance={currentWalletBalance}
+                        wallet4Strong={wallet4Strong}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
