@@ -314,8 +314,8 @@ export default function StatBox(props) {
                                     </StatLabel>
                                     <Flex>
                                         <StatNumber fontSize="lg" color={textColor}>
-                                            {(props.wallet1Strong + props.wallet2Strong + props.wallet3Strong).toFixed(2)} STRNGR<br/>
-                                            (~${dollarUSLocale.format(((props.wallet1Strong + props.wallet2Strong + props.wallet3Strong) * props.strongPrice).toFixed(2))})
+                                            {(props.wallet1Strong + props.wallet2Strong + props.wallet3Strong + props.wallet4Strong).toFixed(2)} STRNGR<br/>
+                                            (~${dollarUSLocale.format(((props.wallet1Strong + props.wallet2Strong + props.wallet3Strong + props.wallet4Strong) * props.strongPrice).toFixed(2))})
                                         </StatNumber>
                                     </Flex>
                                 </Stat>
