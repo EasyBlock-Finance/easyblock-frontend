@@ -824,7 +824,7 @@ export default function Dashboard() {
                     <SellShareBox maxSharesToSold={maxSharesToBeSold} sellPrice={sellPrice}
                                   sellShares={async (count) => await sellShares(count)}
                                   userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
-                                  signer={signer}/> : null}
+                                  signer={signer} userShares={userShares}/> : null}
 
             </Flex>
             <CookieConsent
