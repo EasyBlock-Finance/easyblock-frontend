@@ -82,7 +82,7 @@ let depositTokenContractWithSigner = null;
 
 export default function Dashboard() {
     let pastDistribution = new Date();
-    let nextDistribution = new Date("05/01/2022");
+    let nextDistribution = new Date("05/11/2022");
 
     let Difference_In_Time = nextDistribution.getTime() - pastDistribution.getTime();
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -477,7 +477,7 @@ export default function Dashboard() {
 
     function calculateEstimatedRewardsSingle(reward) {
         reward *= strongPrice;
-        reward = reward / (15 - Difference_In_Days) * 15;
+        reward = reward / (20 - Difference_In_Days) * 20;
         reward -= 901; // average full wallet gas cost to claim
         reward += premiumCollected; // the premium from new share sales (dilution prevention amount + 5%)
         return (reward) / totalShareCount * userShares * 0.9;
@@ -727,7 +727,7 @@ export default function Dashboard() {
                                                        totalShareCount={totalShareCount} userShares={userShares}
                                                        reward={wallet2Strong}
                                                        name={"Wallet 2"}
-                                                       distributionDate={"May 6"}
+                                                       distributionDate={"May 11"}
                                                        strongPrice={strongPrice}
                                                        nextWallet={true}
                                                        premiumCollected={premiumCollected}/>
@@ -737,14 +737,14 @@ export default function Dashboard() {
                                                                totalShareCount={totalShareCount} userShares={userShares}
                                                                reward={wallet3Strong}
                                                                name={"Wallet 3"}
-                                                               distributionDate={"May 11"}
+                                                               distributionDate={"May 21"}
                                                                strongPrice={strongPrice}
                                             />
                                             <UserWalletRewards userDataLoading={userDataLoading}
                                                                totalShareCount={totalShareCount} userShares={userShares}
                                                                reward={wallet1Strong}
                                                                name={"Wallet 1"}
-                                                               distributionDate={"May 16"}
+                                                               distributionDate={"May 31"}
                                                                strongPrice={strongPrice}
                                             /></>
                                         : <p onClick={() => {
@@ -773,8 +773,8 @@ export default function Dashboard() {
                                         (*) This is the reward accumulated from Strongblock but not yet claimed
                                         and
                                         distributed.
-                                        We currently have 3 wallets holding the nodes and rewards are
-                                        distributed every 5 days one after another. These amounts keep growing
+                                        We currently have 4 wallets holding the nodes and rewards from 3 of them are
+                                        distributed every 10 days one after another. These amounts keep growing
                                         as time
                                         passes.
                                     </Text>
@@ -803,7 +803,7 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>May 6, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>May 11, 2022<br/>
                                         <span
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
