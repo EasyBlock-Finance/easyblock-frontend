@@ -29,7 +29,8 @@ export default function SellShareBox(props) {
                 (15% goes to the developers and 25% goes to the community reward pool). Note that as this is an
                 experimental
                 function the fee can be changed, the feature can be improved, or removed.</Text>
-            <Text fontSize={20}><b>Max Shares You Can Sell:</b> {Math.min(props.maxSharesToSold, props.userShares)}
+            <Text fontSize={20}><b>Max Shares You Can
+                Sell:</b> {Math.min(props.maxSharesToSold, props.userShares)}
             </Text>
             {isBreakdown ?
                 <>

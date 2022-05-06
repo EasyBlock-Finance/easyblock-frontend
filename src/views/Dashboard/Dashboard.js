@@ -294,7 +294,7 @@ export default function Dashboard() {
 
                 let userShares = parseInt(await easyBlockContract.shareCount(walletAddress), 10);
 
-                setUserShares(userShares/100);
+                setUserShares(userShares / 100);
                 setIsConnected(true);
 
                 // Deposit token contracts
@@ -338,8 +338,8 @@ export default function Dashboard() {
             let totalReferralRewards = parseInt(await easyBlockContract.totalReferralRewardDistributed(), 10);
 
             setTotalInvestments(totalInvestment);
-            setTotalRewardsPaid(totalRewards/1000000); // USDC has 6 decimals
-            setTotalShareCount(totalShares/100); // Shares have 2 decimals
+            setTotalRewardsPaid(totalRewards / 1000000); // USDC has 6 decimals
+            setTotalShareCount(totalShares / 100); // Shares have 2 decimals
             setPurchaseTokenContract(purchaseTokenAddress);
             setSharePrice(sharePrice / 1000000); // USDC has 6 decimals
             setNodesOwned(totalNodesOwned);
@@ -347,7 +347,7 @@ export default function Dashboard() {
             setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
             setShareHolderCount(holderCount);
-            setMaxSharesToBeSold(maxSharesToSold/100); // Shares have 2 decimals
+            setMaxSharesToBeSold(Math.floor(maxSharesToSold / 100)); // Shares have 2 decimals
             setSellPrice(sellPrice / 1000000 * 100); // USDC has 6 decimals and shares have 2 decimals
             setTotalReferralRewardsDistributed(totalReferralRewards / 1000000); // USDC has 6 decimals
 
@@ -522,8 +522,8 @@ export default function Dashboard() {
                          newInvestments={newInvestments} shareHolderCount={shareHolderCount}
                          totalShareCount={totalShareCount} priceLoading={priceLoading}
                          currentWalletBalance={currentWalletBalance}
-                        wallet4Strong={wallet4Strong}
-                totalRewardsPaid={totalRewardsPaid}/>
+                         wallet4Strong={wallet4Strong}
+                         totalRewardsPaid={totalRewardsPaid}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
