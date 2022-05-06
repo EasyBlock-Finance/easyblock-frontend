@@ -203,7 +203,7 @@ export default function StatBox(props) {
                                         {props.generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {((props.currentWalletBalance + props.newInvestments - props.wallet3Rewards) / (props.strongPrice * 10) * 100).toFixed(0)} %
+                                                {((props.newInvestments) / (props.strongPrice * 10) * 100).toFixed(0)} %
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>

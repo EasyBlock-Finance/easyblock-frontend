@@ -314,7 +314,7 @@ export default function Dashboard() {
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards/1000000); // USDC has 6 decimals
-            setTotalShareCount(totalShares/100);
+            setTotalShareCount(totalShares/100); // Shares have 2 decimals
             setPurchaseTokenContract(purchaseTokenAddress);
             setSharePrice(sharePrice / 1000000); // USDC has 6 decimals
             setNodesOwned(totalNodesOwned);
@@ -322,8 +322,8 @@ export default function Dashboard() {
             setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
             setShareHolderCount(holderCount);
-            setMaxSharesToBeSold(maxSharesToSold);
-            setSellPrice(sellPrice / 1000000); // USDC has 6 decimals
+            setMaxSharesToBeSold(maxSharesToSold/100); // Shares have 2 decimals
+            setSellPrice(sellPrice / 1000000 * 100); // USDC has 6 decimals and shares have 2 decimals
 
 
             // Deposit token contracts
@@ -391,7 +391,7 @@ export default function Dashboard() {
             if (signer != null) {
                 setIsBuying(true);
                 if (purchaseAllowance >= count * 10 * 1000000) {
-                    await easyBlockWithSigner.buyShares(count);
+                    await easyBlockWithSigner.buyShares(count, "0x0000000000000000000000000000000000000000");
                 } else {
                     await depositTokenContractWithSigner.approve(CONTRACT_ADDRESS, approvalAmount);
                 }
@@ -573,7 +573,7 @@ export default function Dashboard() {
                                                     marginLeft: 32
                                                 }}><span
                                                     style={{fontWeight: 'bold'}}>Total:</span> {generalDataLoading ?
-                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice.toFixed(2) : (sharePrice * sharesToBeBought).toFixed(2)}
+                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? (sharePrice * 100).toFixed(2) : (sharePrice * sharesToBeBought * 100).toFixed(2)}
                                                 </Text>
                                                 <Image
                                                     src={'/coins/UsdcLogo.png'}
@@ -661,7 +661,7 @@ export default function Dashboard() {
                                                 } else if (!isConnected) {
                                                     connectWalletHandler();
                                                 } else {
-                                                    buyShares(sharesToBeBought);
+                                                    buyShares(sharesToBeBought * 100);
                                                 }
                                             }}
                                             paddingLeft={8}

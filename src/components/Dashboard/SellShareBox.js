@@ -93,7 +93,7 @@ export default function SellShareBox(props) {
                     my={{sm: "0px", lg: "0px"}}
                     onClick={async () => {
                         setIsSelling(true);
-                        await props.sellShares(sharesToBeSold)
+                        await props.sellShares(sharesToBeSold * 100)
                     }}
                     style={{width: "100%"}}
                 >
