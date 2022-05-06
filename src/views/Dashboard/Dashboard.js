@@ -178,6 +178,9 @@ export default function Dashboard() {
     const [userReferralPurchaseCount, setUserReferralPurchaseCount] = useState(0);
     const [userReferralRewards, setUserReferralRewards] = useState(0);
     const [referer, setReferer] = useState("0x0000000000000000000000000000000000000000");
+    // Auto-compounding
+    const [isAutoCompound, setIsAutoCompound] = useState(false);
+    const [isToggleAutoCompounding, setIsToggleAutoCompounding] = useState(false);
 
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -304,9 +307,12 @@ export default function Dashboard() {
                 setUserDataLoading(false);
 
                 // Referral
-                // Referral
                 setUserReferralPurchaseCount(parseInt(await easyBlockContract.referSaleCount(walletAddress), 10));
                 setUserReferralRewards(parseInt(await easyBlockContract.referFeeEarned(walletAddress), 10) / (10 ** 6));
+
+                // Autocompound
+                let isUserAutoCompound = await easyBlockContract.isAutoCompounding(walletAddress);
+                setIsAutoCompound(isUserAutoCompound);
 
             } else {
                 setIsConnected(false);
@@ -737,6 +743,70 @@ export default function Dashboard() {
                                         - Shares Owned: {userDataLoading ? <Spinner/> : <span>
                                         {userShares}</span>}
                                     </Text>
+
+                                    {(userDataLoading || !isConnected) ? null :
+                                        isAutoCompound ?
+                                            <Button
+                                                bg={"red.500"}
+                                                p="0px"
+                                                variant="no-hover"
+                                                my={{sm: "0px", lg: "0px"}}
+                                                onClick={async () => {
+                                                    setIsToggleAutoCompounding(true);
+                                                    await easyBlockWithSigner.setAutoCompounding(false);
+                                                    setTimeout(async () => {
+                                                        await connectAndGetUserData();
+                                                        setIsToggleAutoCompounding(false);
+                                                    }, 15000);
+                                                }}
+                                                paddingLeft={8}
+                                                paddingRight={8}
+                                                paddingTop={6}
+                                                paddingBottom={6}
+                                                style={{marginBottom: 8}}
+                                            >
+                                                {isToggleAutoCompounding ? <Spinner/> : <Text
+                                                    fontSize="16"
+                                                    color={"#ffffff"}
+                                                    fontWeight="bold"
+                                                    cursor="pointer"
+                                                    transition="all .5s ease"
+                                                    my={{sm: "1.5rem", lg: "0px"}}
+                                                >
+                                                    {"Disable Auto-Compounding"}
+                                                </Text>}
+                                            </Button>
+                                            :
+                                            <Button
+                                                bg={"#43a047"}
+                                                p="0px"
+                                                variant="no-hover"
+                                                my={{sm: "0px", lg: "0px"}}
+                                                onClick={async () => {
+                                                    setIsToggleAutoCompounding(true);
+                                                    await easyBlockWithSigner.setAutoCompounding(true);
+                                                    setTimeout(async () => {
+                                                        await connectAndGetUserData();
+                                                        setIsToggleAutoCompounding(false);
+                                                    }, 15000);
+                                                }}
+                                                paddingLeft={8}
+                                                paddingRight={8}
+                                                paddingTop={6}
+                                                paddingBottom={6}
+                                                style={{marginBottom: 8}}
+                                            >
+                                                {isToggleAutoCompounding ? <Spinner/> : <Text
+                                                    fontSize="16"
+                                                    color={"#ffffff"}
+                                                    fontWeight="bold"
+                                                    cursor="pointer"
+                                                    transition="all .5s ease"
+                                                    my={{sm: "1.5rem", lg: "0px"}}
+                                                >
+                                                    {"Enable Auto-Compounding"}
+                                                </Text>}
+                                            </Button>}
 
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
