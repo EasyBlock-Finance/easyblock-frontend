@@ -113,13 +113,13 @@ export default function StatBox(props) {
                                     fontWeight="bold"
                                     pb=".1rem"
                                 >
-                                    Total Investment
+                                    Total Value of Nodes
                                 </StatLabel>
                                 <Flex>
                                     {props.generalDataLoading ?
                                         <Spinner/> :
                                         <StatNumber fontSize="lg" color={textColor}>
-                                            ${dollarUSLocale.format((props.totalInvestments / 1000000).toFixed(0))}
+                                            ${dollarUSLocale.format(props.strongPrice * 10 * props.nodesOwned)}
                                         </StatNumber>}
                                 </Flex>
                             </Stat>
@@ -143,7 +143,7 @@ export default function StatBox(props) {
                                 </StatLabel>
                                 <Flex>
                                     <StatNumber fontSize="md" color={textColor}>
-                                        ${dollarUSLocale.format(172750 + 5994 + 8591 + 5364 + 3847)}
+                                        ${dollarUSLocale.format(props.totalRewardsPaid)}
                                     </StatNumber>
                                 </Flex>
                             </Stat>

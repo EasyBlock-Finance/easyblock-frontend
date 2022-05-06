@@ -313,10 +313,10 @@ export default function Dashboard() {
             let sellPrice = parseInt(await easyBlockContract.getSellPrice(), 10);
 
             setTotalInvestments(totalInvestment);
-            setTotalRewardsPaid(totalRewards);
+            setTotalRewardsPaid(totalRewards/1000000); // USDC has 6 decimals
             setTotalShareCount(totalShares/100);
             setPurchaseTokenContract(purchaseTokenAddress);
-            setSharePrice(sharePrice / 1000000);
+            setSharePrice(sharePrice / 1000000); // USDC has 6 decimals
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
             setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
@@ -496,7 +496,8 @@ export default function Dashboard() {
                          newInvestments={newInvestments} shareHolderCount={shareHolderCount}
                          totalShareCount={totalShareCount} priceLoading={priceLoading}
                          currentWalletBalance={currentWalletBalance}
-                        wallet4Strong={wallet4Strong}/>
+                        wallet4Strong={wallet4Strong}
+                totalRewardsPaid={totalRewardsPaid}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
