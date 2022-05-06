@@ -55,6 +55,7 @@ import UserWalletRewards from "../../components/Dashboard/UserWalletRewards";
 import SellShareBox from "../../components/Dashboard/SellShareBox";
 // Cookie
 import CookieConsent from "react-cookie-consent";
+import ReferalBox from "../../components/Dashboard/ReferalBox";
 
 initializeFirebase();
 
@@ -172,6 +173,24 @@ export default function Dashboard() {
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
 
+    // Referral
+    const [totalReferralRewardsDistributed, setTotalReferralRewardsDistributed] = useState(0);
+    const [userReferralPurchaseCount, setUserReferralPurchaseCount] = useState(0);
+    const [userReferralRewards, setUserReferralRewards] = useState(0);
+    const [referer, setReferer] = useState("0x0000000000000000000000000000000000000000");
+
+    useEffect(() => {
+        let fullUrl = window.location.href;
+        let splitUrl = fullUrl.split('?');
+        if (splitUrl.length > 1) {
+            let params = splitUrl[1];
+            if (params.indexOf("r=") != -1) {
+                let referer = params.slice(2, 44);
+                setReferer(referer);
+            }
+        }
+    }, []);
+
     useEffect(() => {
         toasts
             .filter((t) => t.visible) // Only consider visible toasts
@@ -284,6 +303,11 @@ export default function Dashboard() {
                 setPurchaseAllowance(allowance);
                 setUserDataLoading(false);
 
+                // Referral
+                // Referral
+                setUserReferralPurchaseCount(parseInt(await easyBlockContract.referSaleCount(walletAddress), 10));
+                setUserReferralRewards(parseInt(await easyBlockContract.referFeeEarned(walletAddress), 10) / (10 ** 6));
+
             } else {
                 setIsConnected(false);
                 setUserDataLoading(false);
@@ -311,6 +335,7 @@ export default function Dashboard() {
             let premiumCollected = parseInt(await easyBlockContract.premiumCollected(), 10);
             let maxSharesToSold = parseInt(await easyBlockContract.getMaxAmountOfSharesToBeSold(), 10);
             let sellPrice = parseInt(await easyBlockContract.getSellPrice(), 10);
+            let totalReferralRewards = parseInt(await easyBlockContract.totalReferralRewardDistributed(), 10);
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards/1000000); // USDC has 6 decimals
@@ -324,6 +349,7 @@ export default function Dashboard() {
             setShareHolderCount(holderCount);
             setMaxSharesToBeSold(maxSharesToSold/100); // Shares have 2 decimals
             setSellPrice(sellPrice / 1000000 * 100); // USDC has 6 decimals and shares have 2 decimals
+            setTotalReferralRewardsDistributed(totalReferralRewards / 1000000); // USDC has 6 decimals
 
 
             // Deposit token contracts
@@ -391,7 +417,7 @@ export default function Dashboard() {
             if (signer != null) {
                 setIsBuying(true);
                 if (purchaseAllowance >= count * 10 * 1000000) {
-                    await easyBlockWithSigner.buyShares(count, "0x0000000000000000000000000000000000000000");
+                    await easyBlockWithSigner.buyShares(count, referer);
                 } else {
                     await depositTokenContractWithSigner.approve(CONTRACT_ADDRESS, approvalAmount);
                 }
@@ -810,6 +836,12 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
+                {isConnected ?
+                    <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
+                                signer={signer} userShares={userShares} userWallet={userWallet}
+                                totalReferralRewards={totalReferralRewardsDistributed}
+                                referSale={userReferralPurchaseCount}
+                                referFee={userReferralRewards}/> : null}
                 {(isConnected && userShares !== 0) ?
                     <SellShareBox maxSharesToSold={maxSharesToBeSold} sellPrice={sellPrice}
                                   sellShares={async (count) => await sellShares(count)}
