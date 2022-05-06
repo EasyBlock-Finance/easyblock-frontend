@@ -274,10 +274,8 @@ export default function Dashboard() {
                 easyBlockWithSigner = easyBlockContract.connect(signer);
 
                 let userShares = parseInt(await easyBlockContract.shareCount(walletAddress), 10);
-                let claimableReward = parseInt(await easyBlockContract.claimableReward(walletAddress), 10);
 
-                setUserShares(userShares);
-                setUserPendingRewards(claimableReward / 1000000);
+                setUserShares(userShares/100);
                 setIsConnected(true);
 
                 // Deposit token contracts
@@ -316,7 +314,7 @@ export default function Dashboard() {
 
             setTotalInvestments(totalInvestment);
             setTotalRewardsPaid(totalRewards);
-            setTotalShareCount(totalShares);
+            setTotalShareCount(totalShares/100);
             setPurchaseTokenContract(purchaseTokenAddress);
             setSharePrice(sharePrice / 1000000);
             setNodesOwned(totalNodesOwned);
@@ -420,15 +418,6 @@ export default function Dashboard() {
     }
 
     // CONTRACT EVENT LISTENERS
-    easyBlockContract.on("RewardCollected", async (amount, address, event) => {
-        if (event.event === "RewardCollected" && address === await signer.getAddress()) {
-            // await getSmartContractData();
-            window.location.reload();
-            setUserPendingRewards(0);
-            setIsClaiming(false);
-            toast.success("Rewards claimed successfully. Your balance will be updated soon.", {duration: 5000,});
-        }
-    });
     easyBlockContract.on("Investment", async (shareCount, price, address, event) => {
             if (event.event === "Investment" && address === await signer.getAddress()) {
                 setGeneralDataLoading(true);
