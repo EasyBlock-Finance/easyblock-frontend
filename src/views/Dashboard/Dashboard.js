@@ -238,9 +238,11 @@ export default function Dashboard() {
         fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
                 try {
                     // Specific wallets
+                    console.log("Got data")
                     setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                    setWallet1Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                    setWallet1Strong(data['portfolio_item_list'][0]['detail']['supply_token_list'][0]['amount']);
                 } catch (e) {
+                    console.log(e);
                 }
             }
         );
@@ -249,7 +251,7 @@ export default function Dashboard() {
                 try {
                     // Specific wallets
                     setWallet2Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                    setWallet2Strong(data['portfolio_item_list'][0]['detail']['supply_token_list'][0]['amount']);
                 } catch (e) {
                 }
             }
@@ -259,7 +261,7 @@ export default function Dashboard() {
                 try {
                     // Specific wallets
                     setWallet3Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
-                    setWallet3Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                    setWallet3Strong(data['portfolio_item_list'][0]['detail']['supply_token_list'][0]['amount']);
 
                     setPriceLoading(false);
                 } catch (e) {
@@ -270,7 +272,7 @@ export default function Dashboard() {
         fetch('https://openapi.debank.com/v1/user/protocol?id=0xeb5e4368B3a804b86270f26D01f3E8208bE32560&protocol_id=strongblock').then(response => response.json()).then(data => {
                 try {
                     // Specific wallets
-                    setWallet4Strong(data['portfolio_item_list'][0]['detail']['token_list'][0]['amount']);
+                    setWallet4Strong(data['portfolio_item_list'][0]['detail']['supply_token_list'][0]['amount']);
 
                     setPriceLoading(false);
                 } catch (e) {
