@@ -258,7 +258,7 @@ export default function StatBox(props) {
                                         {props.generalDataLoading ?
                                             <Spinner/> :
                                             <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                                                {(props.totalShareCount).toFixed(0)}
+                                                {dollarUSLocale.format((props.totalShareCount).toFixed(0))}
                                             </StatNumber>}
                                     </Flex>
                                 </Stat>
