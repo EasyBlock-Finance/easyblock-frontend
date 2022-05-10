@@ -680,7 +680,7 @@ export default function Dashboard() {
                                     {rewardDistributing ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Smart contract migration in progress. Share purchase will be re-enabled after
+                                            Reward distribution in progress. Share purchase will be re-enabled after
                                             it ends.
                                         </Text>
                                         :
