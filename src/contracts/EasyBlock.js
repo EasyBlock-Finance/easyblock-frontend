@@ -1,14 +1,22 @@
-export const CONTRACT_ADDRESS = "0x4b52e8433817dA3123AaECb8f0d1749333c040c0";
+export const CONTRACT_ADDRESS = "0x1346Ebd4fE22682807884738347F75f0d5688a41";
 export const EASYBLOCK_ABI = [{
     "inputs": [{
         "internalType": "uint256",
-        "name": "_fee",
+        "name": "_rewardFee",
         "type": "uint256"
-    }, {"internalType": "address", "name": "_previousContract", "type": "address"}, {
+    }, {"internalType": "uint256", "name": "_initialFee", "type": "uint256"}, {
         "internalType": "uint256",
-        "name": "_totalInvestment",
+        "name": "_referFee",
         "type": "uint256"
-    }, {"internalType": "uint256", "name": "_totalRewards", "type": "uint256"}],
+    }, {"internalType": "uint256", "name": "_totalInvestment", "type": "uint256"}, {
+        "internalType": "uint256",
+        "name": "_totalRewards",
+        "type": "uint256"
+    }, {"internalType": "address", "name": "_tokenAddress", "type": "address"}, {
+        "internalType": "uint256",
+        "name": "_purchaseTokenPrice",
+        "type": "uint256"
+    }, {"internalType": "address", "name": "_previousContract", "type": "address"}],
     "stateMutability": "nonpayable",
     "type": "constructor"
 }, {
@@ -28,16 +36,6 @@ export const EASYBLOCK_ABI = [{
     "type": "event"
 }, {
     "anonymous": false,
-    "inputs": [{"indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256"}, {
-        "indexed": false,
-        "internalType": "address",
-        "name": "shareHolder",
-        "type": "address"
-    }],
-    "name": "RewardCollected",
-    "type": "event"
-}, {
-    "anonymous": false,
     "inputs": [{
         "indexed": false,
         "internalType": "uint256",
@@ -52,36 +50,60 @@ export const EASYBLOCK_ABI = [{
     "name": "ShareSold",
     "type": "event"
 }, {
-    "inputs": [{"internalType": "uint256", "name": "_shareCount", "type": "uint256"}],
-    "name": "buyShares",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "anonymous": false,
+    "inputs": [{"indexed": false, "internalType": "address", "name": "from", "type": "address"}, {
+        "indexed": false,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+    }, {"indexed": false, "internalType": "uint256", "name": "shareCount", "type": "uint256"}],
+    "name": "ShareTransfer",
+    "type": "event"
 }, {
-    "inputs": [],
-    "name": "claimRewards",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "anonymous": false,
+    "inputs": [{
+        "indexed": false,
+        "internalType": "address",
+        "name": "shareHolder",
+        "type": "address"
+    }, {"indexed": false, "internalType": "bool", "name": "isAutoCompounding", "type": "bool"}],
+    "name": "ToggleAutocompound",
+    "type": "event"
 }, {
     "inputs": [{"internalType": "address", "name": "", "type": "address"}],
-    "name": "claimableReward",
+    "name": "addressDiscount",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_shareCount", "type": "uint256"}, {
+        "internalType": "address",
+        "name": "_referer",
+        "type": "address"
+    }], "name": "buyShares", "outputs": [], "stateMutability": "nonpayable", "type": "function"
 }, {
     "inputs": [{"internalType": "uint16", "name": "_start", "type": "uint16"}, {
         "internalType": "uint16",
         "name": "_end",
         "type": "uint16"
-    }], "name": "copyFromPrevious", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+    }, {"internalType": "uint256", "name": "_decimals", "type": "uint256"}],
+    "name": "copyFromPrevious",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "discount",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
 }, {
     "inputs": [{"internalType": "uint32", "name": "_start", "type": "uint32"}, {
         "internalType": "uint32",
         "name": "_end",
         "type": "uint32"
-    }, {"internalType": "uint256", "name": "_amount", "type": "uint256"}],
-    "name": "depositRewards",
+    }, {"internalType": "uint256", "name": "_rewardAmount", "type": "uint256"}],
+    "name": "distributeRewardsDirectly",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -111,20 +133,26 @@ export const EASYBLOCK_ABI = [{
     }], "name": "emergencyWithdrawal", "outputs": [], "stateMutability": "nonpayable", "type": "function"
 }, {
     "inputs": [],
+    "name": "endDistribution",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
     "name": "endMigartion",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
     "inputs": [],
-    "name": "fee",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "name": "feeCollector",
+    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
     "stateMutability": "view",
     "type": "function"
 }, {
     "inputs": [],
-    "name": "feeCollector",
-    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "name": "getAutocompounderCount",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
 }, {
@@ -148,13 +176,37 @@ export const EASYBLOCK_ABI = [{
 }, {
     "inputs": [],
     "name": "holderCount",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "outputs": [{"internalType": "uint32", "name": "", "type": "uint32"}],
     "stateMutability": "view",
     "type": "function"
 }, {
     "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "name": "holders",
     "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+    "name": "increaseTotalInvestment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+    "name": "increaseTotalRewardDistributed",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "initialFee",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "name": "isAutoCompounding",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
     "stateMutability": "view",
     "type": "function"
 }, {
@@ -177,6 +229,12 @@ export const EASYBLOCK_ABI = [{
     "type": "function"
 }, {
     "inputs": [],
+    "name": "isTransferEnabled",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
     "name": "manager",
     "outputs": [{"internalType": "address", "name": "", "type": "address"}],
     "stateMutability": "view",
@@ -190,7 +248,7 @@ export const EASYBLOCK_ABI = [{
 }, {
     "inputs": [],
     "name": "nodeCount",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "outputs": [{"internalType": "uint16", "name": "", "type": "uint16"}],
     "stateMutability": "view",
     "type": "function"
 }, {
@@ -202,12 +260,18 @@ export const EASYBLOCK_ABI = [{
 }, {
     "inputs": [],
     "name": "nodeHoldersCount",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
     "stateMutability": "view",
     "type": "function"
 }, {
     "inputs": [],
     "name": "premiumCollected",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "premiumCollectedSellShare",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
@@ -237,7 +301,25 @@ export const EASYBLOCK_ABI = [{
     "type": "function"
 }, {
     "inputs": [],
-    "name": "rewardAmountInside",
+    "name": "referFee",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "name": "referFeeEarned",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "name": "referSaleCount",
+    "outputs": [{"internalType": "uint32", "name": "", "type": "uint32"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "rewardFee",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
@@ -248,12 +330,6 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "view",
     "type": "function"
 }, {
-    "inputs": [],
-    "name": "sellAllowance",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "view",
-    "type": "function"
-}, {
     "inputs": [{"internalType": "uint256", "name": "_shareAmount", "type": "uint256"}],
     "name": "sellBackShares",
     "outputs": [],
@@ -261,7 +337,13 @@ export const EASYBLOCK_ABI = [{
     "type": "function"
 }, {
     "inputs": [],
-    "name": "sellFee",
+    "name": "sellFeeCommunity",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "sellFeeDeveloper",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
@@ -272,14 +354,26 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "view",
     "type": "function"
 }, {
+    "inputs": [{"internalType": "address", "name": "_targetAddress", "type": "address"}, {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }], "name": "setAddressDiscount", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+}, {
+    "inputs": [{"internalType": "bool", "name": "_isAutoCompounding", "type": "bool"}],
+    "name": "setAutoCompounding",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
     "inputs": [{"internalType": "address", "name": "_tokenAddress", "type": "address"}],
     "name": "setDepositToken",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
-    "inputs": [{"internalType": "uint256", "name": "_fee", "type": "uint256"}],
-    "name": "setFee",
+    "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+    "name": "setDiscount",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -290,13 +384,19 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
+    "inputs": [{"internalType": "uint256", "name": "_fee", "type": "uint256"}],
+    "name": "setInitalFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
     "inputs": [{"internalType": "address", "name": "_address", "type": "address"}],
     "name": "setManager",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
-    "inputs": [{"internalType": "uint256", "name": "_count", "type": "uint256"}],
+    "inputs": [{"internalType": "uint16", "name": "_count", "type": "uint16"}],
     "name": "setNodeCount",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -308,14 +408,26 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
-    "inputs": [{"internalType": "uint256", "name": "_allowance", "type": "uint256"}],
-    "name": "setSellAllowance",
+    "inputs": [{"internalType": "uint256", "name": "_fee", "type": "uint256"}],
+    "name": "setReferFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
     "inputs": [{"internalType": "uint256", "name": "_fee", "type": "uint256"}],
-    "name": "setSellFee",
+    "name": "setRewardFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_fee", "type": "uint256"}],
+    "name": "setSellFeeCommunity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_fee", "type": "uint256"}],
+    "name": "setSellFeeDeveloper",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -338,6 +450,12 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "view",
     "type": "function"
 }, {
+    "inputs": [],
+    "name": "startDistribution",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
     "inputs": [{"internalType": "bool", "name": "_isSellAllowed", "type": "bool"}],
     "name": "toggleIsSellAllowed",
     "outputs": [],
@@ -350,6 +468,12 @@ export const EASYBLOCK_ABI = [{
     "stateMutability": "nonpayable",
     "type": "function"
 }, {
+    "inputs": [{"internalType": "bool", "name": "_isTransferEnabled", "type": "bool"}],
+    "name": "toggleTransferEnabled",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
     "inputs": [],
     "name": "totalAmountOfSellBack",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
@@ -357,7 +481,19 @@ export const EASYBLOCK_ABI = [{
     "type": "function"
 }, {
     "inputs": [],
+    "name": "totalInitialFeeCollected",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
     "name": "totalInvestment",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "totalReferralRewardDistributed",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
@@ -375,6 +511,12 @@ export const EASYBLOCK_ABI = [{
     "type": "function"
 }, {
     "inputs": [],
+    "name": "totalShareCountAutoCompounding",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
     "name": "totalSharesSold",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
@@ -384,14 +526,26 @@ export const EASYBLOCK_ABI = [{
         "internalType": "uint256",
         "name": "_shareAmount",
         "type": "uint256"
-    }], "name": "transferSharesFromManager", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+    }], "name": "transferShares", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+}, {
+    "inputs": [],
+    "name": "withdrawPremiumSellToManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
 }, {
     "inputs": [],
     "name": "withdrawPremiumToManager",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-}, {"inputs": [], "name": "withdrawToManager", "outputs": [], "stateMutability": "nonpayable", "type": "function"}];
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+    "name": "withdrawToManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}];
 
 export const PURCHASE_TOKEN_ABI = [{
     "constant": true,

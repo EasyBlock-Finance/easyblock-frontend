@@ -55,6 +55,7 @@ import UserWalletRewards from "../../components/Dashboard/UserWalletRewards";
 import SellShareBox from "../../components/Dashboard/SellShareBox";
 // Cookie
 import CookieConsent from "react-cookie-consent";
+import ReferalBox from "../../components/Dashboard/ReferalBox";
 
 initializeFirebase();
 
@@ -172,6 +173,27 @@ export default function Dashboard() {
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
 
+    // Referral
+    const [totalReferralRewardsDistributed, setTotalReferralRewardsDistributed] = useState(0);
+    const [userReferralPurchaseCount, setUserReferralPurchaseCount] = useState(0);
+    const [userReferralRewards, setUserReferralRewards] = useState(0);
+    const [referer, setReferer] = useState("0x0000000000000000000000000000000000000000");
+    // Auto-compounding
+    const [isAutoCompound, setIsAutoCompound] = useState(false);
+    const [isToggleAutoCompounding, setIsToggleAutoCompounding] = useState(false);
+
+    useEffect(() => {
+        let fullUrl = window.location.href;
+        let splitUrl = fullUrl.split('?');
+        if (splitUrl.length > 1) {
+            let params = splitUrl[1];
+            if (params.indexOf("r=") != -1) {
+                let referer = params.slice(2, 44);
+                setReferer(referer);
+            }
+        }
+    }, []);
+
     useEffect(() => {
         toasts
             .filter((t) => t.visible) // Only consider visible toasts
@@ -276,10 +298,8 @@ export default function Dashboard() {
                 easyBlockWithSigner = easyBlockContract.connect(signer);
 
                 let userShares = parseInt(await easyBlockContract.shareCount(walletAddress), 10);
-                let claimableReward = parseInt(await easyBlockContract.claimableReward(walletAddress), 10);
 
-                setUserShares(userShares);
-                setUserPendingRewards(claimableReward / 1000000);
+                setUserShares(userShares / 100);
                 setIsConnected(true);
 
                 // Deposit token contracts
@@ -287,6 +307,14 @@ export default function Dashboard() {
                 let allowance = parseInt(await depositTokenContract.allowance(walletAddress, CONTRACT_ADDRESS), 10);
                 setPurchaseAllowance(allowance);
                 setUserDataLoading(false);
+
+                // Referral
+                setUserReferralPurchaseCount(parseInt(await easyBlockContract.referSaleCount(walletAddress), 10));
+                setUserReferralRewards(parseInt(await easyBlockContract.referFeeEarned(walletAddress), 10) / (10 ** 6));
+
+                // Autocompound
+                let isUserAutoCompound = await easyBlockContract.isAutoCompounding(walletAddress);
+                setIsAutoCompound(isUserAutoCompound);
 
             } else {
                 setIsConnected(false);
@@ -315,19 +343,21 @@ export default function Dashboard() {
             let premiumCollected = parseInt(await easyBlockContract.premiumCollected(), 10);
             let maxSharesToSold = parseInt(await easyBlockContract.getMaxAmountOfSharesToBeSold(), 10);
             let sellPrice = parseInt(await easyBlockContract.getSellPrice(), 10);
+            let totalReferralRewards = parseInt(await easyBlockContract.totalReferralRewardDistributed(), 10);
 
             setTotalInvestments(totalInvestment);
-            setTotalRewardsPaid(totalRewards);
-            setTotalShareCount(totalShares);
+            setTotalRewardsPaid(totalRewards / 1000000); // USDC has 6 decimals
+            setTotalShareCount(totalShares / 100); // Shares have 2 decimals
             setPurchaseTokenContract(purchaseTokenAddress);
-            setSharePrice(sharePrice / 1000000);
+            setSharePrice(sharePrice / 1000000); // USDC has 6 decimals
             setNodesOwned(totalNodesOwned);
             setNewInvestments(investment / 1000000); // USDC has 6 decimals
             setPremiumCollected(premiumCollected / 1000000); // USDC has 6 decimals
             setRewardDistributing(!sharePurchaseEnabled);
             setShareHolderCount(holderCount);
-            setMaxSharesToBeSold(maxSharesToSold);
-            setSellPrice(sellPrice / 1000000); // USDC has 6 decimals
+            setMaxSharesToBeSold(Math.floor(maxSharesToSold / 100)); // Shares have 2 decimals
+            setSellPrice(sellPrice / 1000000 * 100); // USDC has 6 decimals and shares have 2 decimals
+            setTotalReferralRewardsDistributed(totalReferralRewards / 1000000); // USDC has 6 decimals
 
 
             // Deposit token contracts
@@ -395,7 +425,7 @@ export default function Dashboard() {
             if (signer != null) {
                 setIsBuying(true);
                 if (purchaseAllowance >= count * 10 * 1000000) {
-                    await easyBlockWithSigner.buyShares(count);
+                    await easyBlockWithSigner.buyShares(count, referer);
                 } else {
                     await depositTokenContractWithSigner.approve(CONTRACT_ADDRESS, approvalAmount);
                 }
@@ -422,15 +452,6 @@ export default function Dashboard() {
     }
 
     // CONTRACT EVENT LISTENERS
-    easyBlockContract.on("RewardCollected", async (amount, address, event) => {
-        if (event.event === "RewardCollected" && address === await signer.getAddress()) {
-            // await getSmartContractData();
-            window.location.reload();
-            setUserPendingRewards(0);
-            setIsClaiming(false);
-            toast.success("Rewards claimed successfully. Your balance will be updated soon.", {duration: 5000,});
-        }
-    });
     easyBlockContract.on("Investment", async (shareCount, price, address, event) => {
             if (event.event === "Investment" && address === await signer.getAddress()) {
                 setGeneralDataLoading(true);
@@ -509,7 +530,8 @@ export default function Dashboard() {
                          newInvestments={newInvestments} shareHolderCount={shareHolderCount}
                          totalShareCount={totalShareCount} priceLoading={priceLoading}
                          currentWalletBalance={currentWalletBalance}
-                        wallet4Strong={wallet4Strong}/>
+                         wallet4Strong={wallet4Strong}
+                         totalRewardsPaid={totalRewardsPaid}/>
 
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
@@ -585,7 +607,7 @@ export default function Dashboard() {
                                                     marginLeft: 32
                                                 }}><span
                                                     style={{fontWeight: 'bold'}}>Total:</span> {generalDataLoading ?
-                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice.toFixed(2) : (sharePrice * sharesToBeBought).toFixed(2)}
+                                                    <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? (sharePrice * 100).toFixed(2) : (sharePrice * sharesToBeBought * 100).toFixed(2)}
                                                 </Text>
                                                 <Image
                                                     src={'/coins/UsdcLogo.png'}
@@ -673,7 +695,7 @@ export default function Dashboard() {
                                                 } else if (!isConnected) {
                                                     connectWalletHandler();
                                                 } else {
-                                                    buyShares(sharesToBeBought);
+                                                    buyShares(sharesToBeBought * 100);
                                                 }
                                             }}
                                             paddingLeft={8}
@@ -723,6 +745,70 @@ export default function Dashboard() {
                                         - Shares Owned: {userDataLoading ? <Spinner/> : <span>
                                         {userShares}</span>}
                                     </Text>
+
+                                    {(userDataLoading || !isConnected) ? null :
+                                        isAutoCompound ?
+                                            <Button
+                                                bg={"red.500"}
+                                                p="0px"
+                                                variant="no-hover"
+                                                my={{sm: "0px", lg: "0px"}}
+                                                onClick={async () => {
+                                                    setIsToggleAutoCompounding(true);
+                                                    await easyBlockWithSigner.setAutoCompounding(false);
+                                                    setTimeout(async () => {
+                                                        await connectAndGetUserData();
+                                                        setIsToggleAutoCompounding(false);
+                                                    }, 15000);
+                                                }}
+                                                paddingLeft={8}
+                                                paddingRight={8}
+                                                paddingTop={6}
+                                                paddingBottom={6}
+                                                style={{marginBottom: 8}}
+                                            >
+                                                {isToggleAutoCompounding ? <Spinner/> : <Text
+                                                    fontSize="16"
+                                                    color={"#ffffff"}
+                                                    fontWeight="bold"
+                                                    cursor="pointer"
+                                                    transition="all .5s ease"
+                                                    my={{sm: "1.5rem", lg: "0px"}}
+                                                >
+                                                    {"Disable Auto-Compounding"}
+                                                </Text>}
+                                            </Button>
+                                            :
+                                            <Button
+                                                bg={"#43a047"}
+                                                p="0px"
+                                                variant="no-hover"
+                                                my={{sm: "0px", lg: "0px"}}
+                                                onClick={async () => {
+                                                    setIsToggleAutoCompounding(true);
+                                                    await easyBlockWithSigner.setAutoCompounding(true);
+                                                    setTimeout(async () => {
+                                                        await connectAndGetUserData();
+                                                        setIsToggleAutoCompounding(false);
+                                                    }, 15000);
+                                                }}
+                                                paddingLeft={8}
+                                                paddingRight={8}
+                                                paddingTop={6}
+                                                paddingBottom={6}
+                                                style={{marginBottom: 8}}
+                                            >
+                                                {isToggleAutoCompounding ? <Spinner/> : <Text
+                                                    fontSize="16"
+                                                    color={"#ffffff"}
+                                                    fontWeight="bold"
+                                                    cursor="pointer"
+                                                    transition="all .5s ease"
+                                                    my={{sm: "1.5rem", lg: "0px"}}
+                                                >
+                                                    {"Enable Auto-Compounding"}
+                                                </Text>}
+                                            </Button>}
 
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
@@ -822,6 +908,12 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
+                {isConnected ?
+                    <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
+                                signer={signer} userShares={userShares} userWallet={userWallet}
+                                totalReferralRewards={totalReferralRewardsDistributed}
+                                referSale={userReferralPurchaseCount}
+                                referFee={userReferralRewards}/> : null}
                 {(isConnected && userShares !== 0) ?
                     <SellShareBox maxSharesToSold={maxSharesToBeSold} sellPrice={sellPrice}
                                   sellShares={async (count) => await sellShares(count)}
