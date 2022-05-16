@@ -815,7 +815,7 @@ export default function Dashboard() {
                                                        totalShareCount={totalShareCount} userShares={userShares}
                                                        reward={wallet3Strong}
                                                        name={"Wallet 3"}
-                                                       distributionDate={"May 31"}
+                                                       distributionDate={"May 21"}
                                                        strongPrice={strongPrice}
                                                        nextWallet={true}
                                                        premiumCollected={premiumCollected}/>
@@ -825,14 +825,14 @@ export default function Dashboard() {
                                                                totalShareCount={totalShareCount} userShares={userShares}
                                                                reward={wallet1Strong}
                                                                name={"Wallet 1"}
-                                                               distributionDate={"June 10"}
+                                                               distributionDate={"May 31"}
                                                                strongPrice={strongPrice}
                                             />
                                             <UserWalletRewards userDataLoading={userDataLoading}
                                                                totalShareCount={totalShareCount} userShares={userShares}
                                                                reward={wallet2Strong}
                                                                name={"Wallet 2"}
-                                                               distributionDate={"June 20"}
+                                                               distributionDate={"June 10"}
                                                                strongPrice={strongPrice}
                                             /></>
                                         : <p onClick={() => {
@@ -891,7 +891,7 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>May 31, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>May 21, 2022<br/>
                                         <span
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
