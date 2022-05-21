@@ -83,7 +83,7 @@ let depositTokenContractWithSigner = null;
 
 export default function Dashboard() {
     let pastDistribution = new Date();
-    let nextDistribution = new Date("05/21/2022");
+    let nextDistribution = new Date("05/31/2022");
 
     let Difference_In_Time = nextDistribution.getTime() - pastDistribution.getTime();
     let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -812,9 +812,9 @@ export default function Dashboard() {
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
                                                        totalShareCount={totalShareCount} userShares={userShares}
-                                                       reward={wallet3Strong}
-                                                       name={"Wallet 3"}
-                                                       distributionDate={"May 21"}
+                                                       reward={wallet1Strong}
+                                                       name={"Wallet 1"}
+                                                       distributionDate={"May 31"}
                                                        strongPrice={strongPrice}
                                                        nextWallet={true}
                                                        premiumCollected={premiumCollected}/>
@@ -822,16 +822,16 @@ export default function Dashboard() {
                                         <>
                                             <UserWalletRewards userDataLoading={userDataLoading}
                                                                totalShareCount={totalShareCount} userShares={userShares}
-                                                               reward={wallet1Strong}
-                                                               name={"Wallet 1"}
-                                                               distributionDate={"May 31"}
+                                                               reward={wallet2Strong}
+                                                               name={"Wallet 2"}
+                                                               distributionDate={"June 10"}
                                                                strongPrice={strongPrice}
                                             />
                                             <UserWalletRewards userDataLoading={userDataLoading}
                                                                totalShareCount={totalShareCount} userShares={userShares}
-                                                               reward={wallet2Strong}
-                                                               name={"Wallet 2"}
-                                                               distributionDate={"June 10"}
+                                                               reward={wallet3Strong}
+                                                               name={"Wallet 3"}
+                                                               distributionDate={"June 20"}
                                                                strongPrice={strongPrice}
                                             /></>
                                         : <p onClick={() => {
@@ -890,16 +890,16 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>May 21, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>May 31, 2022<br/>
                                         <span
                                             style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
                                         <br/>
                                         {userDataLoading ? <Spinner/> :
                                             <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
                                                 <b>Estimated Amount:</b> ${totalShareCount === 0 ? 0
-                                                : calculateEstimatedRewardsSingle(wallet3Strong) > (calculateCurrentRewardSingle(wallet3Strong))
-                                                    ? calculateEstimatedRewardsSingle(wallet3Strong).toFixed(2)
-                                                    : (calculateCurrentRewardSingle(wallet3Strong)).toFixed(2)}</span>}
+                                                : calculateEstimatedRewardsSingle(wallet1Strong) > (calculateCurrentRewardSingle(wallet1Strong))
+                                                    ? calculateEstimatedRewardsSingle(wallet1Strong).toFixed(2)
+                                                    : (calculateCurrentRewardSingle(wallet1Strong)).toFixed(2)}</span>}
                                     </Text>
 
                                 </Flex>
