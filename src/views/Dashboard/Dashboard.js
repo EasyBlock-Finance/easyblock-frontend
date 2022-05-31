@@ -481,7 +481,7 @@ export default function Dashboard() {
         try {
             if (signer != null) {
                 setIsMinting(true);
-                const options = {value: ethers.utils.parseEther((10 * count).toString())}
+                const options = {value: ethers.utils.parseEther((20 * count).toString())}
                 await nftContractWithSigner.mintForSelf(count, options);
             } else {
                 await connectWalletHandler();

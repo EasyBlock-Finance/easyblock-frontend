@@ -26,7 +26,7 @@ export default function NftBox(props) {
                 EasyBlock NFTs</Text>
             <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can turn your shares into NFTs and trade them on
                 the secondary market. Every EasyBlock Avatar NFT
-                can be minted with 50 shares and has a mint cost of 10 FTM. EasyBlock Avatar NFTs will receive rewards
+                can be minted with 50 shares and has a mint cost of 20 FTM. EasyBlock Avatar NFTs will receive rewards
                 as normal. Maximum of 20 NFTs can be minted at the same time.</Text>
             <Text fontSize={20}><b>Max NFTs you can mint:</b> {Math.floor(props.shareCount / 50)}
             </Text>
