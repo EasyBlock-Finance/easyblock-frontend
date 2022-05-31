@@ -493,6 +493,22 @@ export default function Dashboard() {
         }
     }
 
+    async function mintNFTFtm(count) {
+        try {
+            if (signer != null) {
+                setIsMinting(true);
+                const options = {value: ethers.utils.parseEther((100 * count).toString())}
+                await nftContractWithSigner.mintForSelfFtm(count, options);
+            } else {
+                await connectWalletHandler();
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("An error occurred. Can't mint NFT.", {duration: 5000,});
+            setIsMinting(false);
+        }
+    }
+
     async function claimRewards() {
         try {
             if (signer != null) {
@@ -976,11 +992,13 @@ export default function Dashboard() {
                     <NftBox
                         shareCount={userShares}
                         mintNFT={async (count) => await mintNFT(count)}
+                        mintNFTFtm={async (count) => await mintNFTFtm(count)}
                         isMinting={isMinting}
                         userNftCount={userNftCount}
                         claimableReward={claimableReward}
                         isClaiming={isClaiming}
-                    claimRewards={async () => await claimRewards()}/> : null}
+                    claimRewards={async () => await claimRewards()}
+                    NFT_ADDRESS={NFT_ADDRESS}/> : null}
                 {isConnected ?
                     <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
                                 signer={signer} userShares={userShares} userWallet={userWallet}
