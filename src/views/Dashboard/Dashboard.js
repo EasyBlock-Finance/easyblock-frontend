@@ -534,7 +534,6 @@ export default function Dashboard() {
                 setIsBuying(false);
                 setSharesToBeBought(0);
                 toast.success("Shares bought successfully. Your balance will be updated soon.", {duration: 5000,});
-
             }
         }
     );
@@ -546,6 +545,17 @@ export default function Dashboard() {
             toast.success("Approval successful. You can buy your shares now!", {duration: 5000,});
         }
     });
+
+    nftContract.on("Transfer", async (from, to, tokenId, event) => {
+        console.log("Inside event.");
+        console.log(event);
+        if (event.event === "Transfer" && to === await signer.getAddress()) {
+            console.log("Should act.")
+            await connectAndGetUserData();
+            setIsMinting(false);
+            toast.success("NFT minted successfuly.", {duration: 5000,});
+        }
+    })
 
     provider.on("network", (newNetwork, oldNetwork) => {
         if (oldNetwork) {
