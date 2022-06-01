@@ -138,6 +138,8 @@ export default function NftBox(props) {
                 <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can also mint The Easy Club NFTs with 100 FTM without your shares.
                 NFTs minted without shares won't earn any StrongBlock rewards.</Text>
                 <Flex maxWidth={300} flexDirection={"column"}>
+                    <Text fontSize={20}><b>Available To Mint:</b> {5000 - props.minted} / {props.maxSupply}
+                    </Text>
                     <Flex marginBottom={4}>
                         <Text fontSize={20} fontWeight={"bold"} marginRight={4}>Mint Count: </Text>
                         <Flex flex={1}/>

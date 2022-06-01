@@ -198,6 +198,8 @@ export default function Dashboard() {
     // NFT
     const [userNftCount, setUserNftCount] = useState(0);
     const [claimableReward, setClaimableReward] = useState(0);
+    const [maxSupply, setMaxSupply] = useState(5000);
+    const [minted, setMinted] = useState(0);
 
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -387,6 +389,10 @@ export default function Dashboard() {
             // Deposit token contracts
             depositTokenContract = new ethers.Contract(purchaseTokenAddress, PURCHASE_TOKEN_ABI, provider);
 
+            // NFT
+            setMaxSupply(parseInt(await nftContract.maxSupply(), 10));
+            setMinted(parseInt(await nftContract.numTokensMinted(), 10));
+
             // UI Change
             setGeneralDataLoading(false);
             console.log("Smart contract data here")
@@ -551,11 +557,24 @@ export default function Dashboard() {
         console.log(event);
         if (event.event === "Transfer" && to === await signer.getAddress()) {
             console.log("Should act.")
+            await getSmartContractData();
             await connectAndGetUserData();
             setIsMinting(false);
             toast.success("NFT minted successfuly.", {duration: 5000,});
         }
     })
+
+    rewardContract.on("Claim", async(address, amount, token, event) => {
+        console.log("Inside event.");
+        console.log(event);
+        if (event.event === "Claim" && address === await signer.getAddress()) {
+            console.log("Should act.")
+            await getSmartContractData();
+            await connectAndGetUserData();
+            setIsClaiming(false);
+            toast.success("Reward Claimed.", {duration: 5000,});
+        }
+    });
 
     provider.on("network", (newNetwork, oldNetwork) => {
         if (oldNetwork) {
@@ -1007,8 +1026,10 @@ export default function Dashboard() {
                         userNftCount={userNftCount}
                         claimableReward={claimableReward}
                         isClaiming={isClaiming}
-                    claimRewards={async () => await claimRewards()}
-                    NFT_ADDRESS={NFT_ADDRESS}/> : null}
+                        claimRewards={async () => await claimRewards()}
+                        NFT_ADDRESS={NFT_ADDRESS}
+                        maxSupply={maxSupply}
+                        minted={minted}/> : null}
                 {isConnected ?
                     <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
                                 signer={signer} userShares={userShares} userWallet={userWallet}
