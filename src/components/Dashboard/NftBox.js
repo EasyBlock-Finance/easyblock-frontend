@@ -24,11 +24,14 @@ export default function NftBox(props) {
         <Flex width={"100%"} backgroundColor={"gray.700"} borderRadius={8} flexDirection={"column"}
               padding={window.innerWidth < 960 ? 4 : 8} marginBottom={4}>
             <Text fontSize="48" fontWeight="bold" pb=".3rem" marginBottom={0}>The Easy Club NFTs</Text>
+
             <Text fontSize="16" pb=".3rem" marginBottom={0}>
                 Browse The Easy Club Collection on <a
                 href={'https://paintswap.finance/marketplace/collections/' + props.NFT_ADDRESS}
                 target={"_blank"}
                 style={{fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer'}}>PaintSwap</a>
+            </Text>
+            <Text fontSize={20}><b>Available To Mint:</b> {5000 - props.minted} / {props.maxSupply}
             </Text>
 
             <Flex flexDirection={"column"} marginTop={8}>
@@ -135,11 +138,9 @@ export default function NftBox(props) {
 
             <Flex flexDirection={"column"} marginTop={16}>
                 <Text fontSize="32" fontWeight="bold" pb=".3rem" marginTop={0}>Mint NFTs with FTM</Text>
-                <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can also mint The Easy Club NFTs with 100 FTM without your shares.
+                <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can also mint The Easy Club NFTs with 100 FTM without shares.
                 NFTs minted without shares won't earn any StrongBlock rewards.</Text>
                 <Flex maxWidth={300} flexDirection={"column"}>
-                    <Text fontSize={20}><b>Available To Mint:</b> {5000 - props.minted} / {props.maxSupply}
-                    </Text>
                     <Flex marginBottom={4}>
                         <Text fontSize={20} fontWeight={"bold"} marginRight={4}>Mint Count: </Text>
                         <Flex flex={1}/>
