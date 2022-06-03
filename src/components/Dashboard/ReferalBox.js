@@ -21,7 +21,7 @@ export default function ReferalBox(props) {
                     }}>https://strong.easyblock.finance?r={props.userWallet}</a> : "You need to have at least 1 shares to refer"}
             </Text>
 
-            <Text fontSize={20}><b>Total Referral Rewards Distributed: </b>{props.totalReferralRewards.toFixed(4)} USDC</Text>
+            <Text fontSize={20}><b>Total Referral Rewards Distributed: </b>{(0.4608 + props.totalReferralRewards).toFixed(4)} USDC</Text>
             <Text fontSize={20}><b>Purchases Made with Your Link: </b>{props.referSale}</Text>
             <Text fontSize={20}><b>Your Referral Earnings: </b>{props.referFee.toFixed(4)} $USDC</Text>
         </Flex>

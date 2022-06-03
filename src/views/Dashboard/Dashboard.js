@@ -44,7 +44,15 @@ import {BsChevronDown} from "react-icons/bs";
 import AdminNavbar from "../../components/Navbars/AdminNavbar.js";
 // Web3
 import {ethers} from 'ethers';
-import {CONTRACT_ADDRESS, EASYBLOCK_ABI, PURCHASE_TOKEN_ABI} from "../../contracts/EasyBlock";
+import {
+    CONTRACT_ADDRESS,
+    EASYBLOCK_ABI,
+    PURCHASE_TOKEN_ABI,
+    NFT_ADDRESS,
+    NFT_ABI,
+    REWARD_ADDRESS,
+    REWARD_ABI
+} from "../../contracts/EasyBlock";
 // Toast
 import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 // Analytics
@@ -56,6 +64,7 @@ import SellShareBox from "../../components/Dashboard/SellShareBox";
 // Cookie
 import CookieConsent from "react-cookie-consent";
 import ReferalBox from "../../components/Dashboard/ReferalBox";
+import NftBox from "../../components/Dashboard/NftBox";
 
 initializeFirebase();
 
@@ -74,9 +83,13 @@ if (window.ethereum != null) {
 
 const easyBlockContract = new ethers.Contract(CONTRACT_ADDRESS, EASYBLOCK_ABI, provider);
 const usdcContract = new ethers.Contract("0x04068DA6C83AFCFA0e13ba15A6696662335D5B75", PURCHASE_TOKEN_ABI, provider);
+const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider)
+const rewardContract = new ethers.Contract(REWARD_ADDRESS, REWARD_ABI, provider);
 
 let signer = null;
 let easyBlockWithSigner = null;
+let nftContractWithSigner = null;
+let rewardContractWithSigner = null;
 
 let depositTokenContract = null;
 let depositTokenContractWithSigner = null;
@@ -163,6 +176,7 @@ export default function Dashboard() {
     const [userDataLoading, setUserDataLoading] = useState(true);
     const [isClaiming, setIsClaiming] = useState(false);
     const [isBuying, setIsBuying] = useState(false);
+    const [isMinting, setIsMinting] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
     const [buyError, setBuyError] = useState(false);
     const [priceLoading, setPriceLoading] = useState(true);
@@ -181,6 +195,11 @@ export default function Dashboard() {
     // Auto-compounding
     const [isAutoCompound, setIsAutoCompound] = useState(false);
     const [isToggleAutoCompounding, setIsToggleAutoCompounding] = useState(false);
+    // NFT
+    const [userNftCount, setUserNftCount] = useState(0);
+    const [claimableReward, setClaimableReward] = useState(0);
+    const [maxSupply, setMaxSupply] = useState(5000);
+    const [minted, setMinted] = useState(0);
 
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -238,7 +257,6 @@ export default function Dashboard() {
         fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
                 try {
                     // Specific wallets
-                    console.log("Got data")
                     setWallet1Rewards(data['portfolio_item_list'][0]['stats']['asset_usd_value']);
                     setWallet1Strong(data['portfolio_item_list'][0]['detail']['supply_token_list'][0]['amount']);
                 } catch (e) {
@@ -296,6 +314,8 @@ export default function Dashboard() {
                 let walletAddress = await signer.getAddress();
                 setUserWallet(walletAddress);
                 easyBlockWithSigner = easyBlockContract.connect(signer);
+                nftContractWithSigner = nftContract.connect(signer);
+                rewardContractWithSigner = rewardContract.connect(signer);
 
                 let userShares = parseInt(await easyBlockContract.shareCount(walletAddress), 10);
 
@@ -315,6 +335,12 @@ export default function Dashboard() {
                 // Autocompound
                 let isUserAutoCompound = await easyBlockContract.isAutoCompounding(walletAddress);
                 setIsAutoCompound(isUserAutoCompound);
+
+                // NFT
+                setUserNftCount(parseInt(await nftContract.balanceOf(walletAddress), 10))
+                console.log("Hey hey");
+                console.log(parseInt(await rewardContractWithSigner.getAllRewards(), 10));
+                setClaimableReward(parseInt(await rewardContractWithSigner.getAllRewards(), 10));
 
             } else {
                 setIsConnected(false);
@@ -363,8 +389,13 @@ export default function Dashboard() {
             // Deposit token contracts
             depositTokenContract = new ethers.Contract(purchaseTokenAddress, PURCHASE_TOKEN_ABI, provider);
 
+            // NFT
+            setMaxSupply(parseInt(await nftContract.maxSupply(), 10));
+            setMinted(parseInt(await nftContract.numTokensMinted(), 10));
+
             // UI Change
             setGeneralDataLoading(false);
+            console.log("Smart contract data here")
 
             await connectAndGetUserData()
         } catch (e) {
@@ -451,6 +482,54 @@ export default function Dashboard() {
         }
     }
 
+    // NFT interactions
+    async function mintNFT(count) {
+        try {
+            if (signer != null) {
+                setIsMinting(true);
+                const options = {value: ethers.utils.parseEther((20 * count).toString())}
+                await nftContractWithSigner.mintForSelf(count, options);
+            } else {
+                await connectWalletHandler();
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("An error occurred. Can't mint NFT.", {duration: 5000,});
+            setIsMinting(false);
+        }
+    }
+
+    async function mintNFTFtm(count) {
+        try {
+            if (signer != null) {
+                setIsMinting(true);
+                const options = {value: ethers.utils.parseEther((100 * count).toString())}
+                await nftContractWithSigner.mintForSelfFtm(count, options);
+            } else {
+                await connectWalletHandler();
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("An error occurred. Can't mint NFT.", {duration: 5000,});
+            setIsMinting(false);
+        }
+    }
+
+    async function claimRewards() {
+        try {
+            if (signer != null) {
+                setIsClaiming(true);
+                await rewardContractWithSigner.claimAll();
+            } else {
+                await connectWalletHandler();
+            }
+        } catch (e) {
+            console.log(e);
+            toast.error("An error occurred. Can't claim reward.", {duration: 5000,});
+            setIsClaiming(false);
+        }
+    }
+
     // CONTRACT EVENT LISTENERS
     easyBlockContract.on("Investment", async (shareCount, price, address, event) => {
             if (event.event === "Investment" && address === await signer.getAddress()) {
@@ -461,7 +540,6 @@ export default function Dashboard() {
                 setIsBuying(false);
                 setSharesToBeBought(0);
                 toast.success("Shares bought successfully. Your balance will be updated soon.", {duration: 5000,});
-
             }
         }
     );
@@ -471,6 +549,30 @@ export default function Dashboard() {
             await updateAllowance();
             setIsBuying(false);
             toast.success("Approval successful. You can buy your shares now!", {duration: 5000,});
+        }
+    });
+
+    nftContract.on("Transfer", async (from, to, tokenId, event) => {
+        console.log("Inside event.");
+        console.log(event);
+        if (event.event === "Transfer" && to === await signer.getAddress()) {
+            console.log("Should act.")
+            await getSmartContractData();
+            await connectAndGetUserData();
+            setIsMinting(false);
+            toast.success("NFT minted successfuly.", {duration: 5000,});
+        }
+    })
+
+    rewardContract.on("Claim", async(address, amount, token, event) => {
+        console.log("Inside event.");
+        console.log(event);
+        if (event.event === "Claim" && address === await signer.getAddress()) {
+            console.log("Should act.")
+            await getSmartContractData();
+            await connectAndGetUserData();
+            setIsClaiming(false);
+            toast.success("Reward Claimed.", {duration: 5000,});
         }
     });
 
@@ -565,8 +667,15 @@ export default function Dashboard() {
                                     p="1.5rem 1.2rem 0.3rem 1.2rem"
                                     lineHeight="1.6"
                                 >
-                                    <Text fontSize="24" fontWeight="bold" pb=".3rem" marginBottom={4}>
+                                    <Text fontSize="24" fontWeight="bold" pb=".3rem" marginBottom={1}>
                                         Buy EasyBlock Shares
+                                    </Text>
+                                    <Text fontSize="16" pb=".3rem" marginBottom={4}>
+                                        You can also buy shares in NFT form. <a
+                                        href={'https://paintswap.finance/marketplace/collections/' + NFT_ADDRESS}
+                                        target={"_blank"}
+                                        style={{fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer'}}>Browse
+                                        all EasyBlock NFTs.</a>
                                     </Text>
                                     <div style={{
                                         display: 'flex',
@@ -680,7 +789,8 @@ export default function Dashboard() {
                                     {rewardDistributing ?
                                         <Text fontSize="16" fontWeight="bold" pb=".3rem" marginBottom={4}
                                               color={"red.400"}>
-                                            Share purchase is temporarily disabled because of StrongBlock's recent reward cap announcement.
+                                            Share purchase is temporarily disabled because of StrongBlock's recent
+                                            reward cap announcement.
                                         </Text>
                                         :
                                         <Button
@@ -907,6 +1017,19 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
+                {isConnected ?
+                    <NftBox
+                        shareCount={userShares}
+                        mintNFT={async (count) => await mintNFT(count)}
+                        mintNFTFtm={async (count) => await mintNFTFtm(count)}
+                        isMinting={isMinting}
+                        userNftCount={userNftCount}
+                        claimableReward={claimableReward}
+                        isClaiming={isClaiming}
+                        claimRewards={async () => await claimRewards()}
+                        NFT_ADDRESS={NFT_ADDRESS}
+                        maxSupply={maxSupply}
+                        minted={minted}/> : null}
                 {isConnected ?
                     <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
                                 signer={signer} userShares={userShares} userWallet={userWallet}
