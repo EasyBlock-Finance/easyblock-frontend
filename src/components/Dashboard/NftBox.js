@@ -160,7 +160,7 @@ export default function NftBox(props) {
                                 onBlur={(e) => {
                                     if (e.target.value === "" || isNaN(parseInt(e.target.value)) || parseInt(e.target.value) < 1) {
                                         setNftToMintFtm(1);
-                                    } else if (e.target.value === "" || isNaN(parseInt(e.target.value)) || parseInt(e.target.value) > Math.floor(props.shareCount / 50) || parseInt(e.target.value) > 20) {
+                                    } else if (!(e.target.value === "" || isNaN(parseInt(e.target.value))) && parseInt(e.target.value) > 20) {
                                         setNftToMintFtm(20);
                                     }
                                 }}
