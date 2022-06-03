@@ -649,13 +649,13 @@ export default function Dashboard() {
                     my="26px"
                     gap="24px"
                 >
-                    <Card maxHeight="600px" p="1rem">
+                    <Card maxHeight="640px" p="1rem">
                         <CardBody
                             p="0px"
                             bgPosition="center"
                             bgRepeat="no-repeat"
                             w="100%"
-                            h={{sm: "400px", lg: "400px"}}
+                            h={{sm: "600px", lg: "400px"}}
                             bgSize="cover"
                             position="relative"
                             borderRadius="15px"
