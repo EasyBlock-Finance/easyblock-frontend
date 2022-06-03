@@ -642,7 +642,20 @@ export default function Dashboard() {
                          currentWalletBalance={currentWalletBalance}
                          wallet4Strong={wallet4Strong}
                          totalRewardsPaid={totalRewardsPaid}/>
-
+                {isConnected ?
+                    <NftBox
+                        shareCount={userShares}
+                        mintNFT={async (count) => await mintNFT(count)}
+                        mintNFTFtm={async (count) => await mintNFTFtm(count)}
+                        isMinting={isMinting}
+                        userNftCount={userNftCount}
+                        claimableReward={claimableReward}
+                        isClaiming={isClaiming}
+                        claimRewards={async () => await claimRewards()}
+                        NFT_ADDRESS={NFT_ADDRESS}
+                        maxSupply={maxSupply}
+                        minted={minted}
+                        userNFTs={userNFTs}/> : null}
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
                     templateRows={{md: "1fr auto", lg: "1fr"}}
@@ -1025,20 +1038,7 @@ export default function Dashboard() {
                         </CardBody>
                     </Card>
                 </Grid>
-                {isConnected ?
-                    <NftBox
-                        shareCount={userShares}
-                        mintNFT={async (count) => await mintNFT(count)}
-                        mintNFTFtm={async (count) => await mintNFTFtm(count)}
-                        isMinting={isMinting}
-                        userNftCount={userNftCount}
-                        claimableReward={claimableReward}
-                        isClaiming={isClaiming}
-                        claimRewards={async () => await claimRewards()}
-                        NFT_ADDRESS={NFT_ADDRESS}
-                        maxSupply={maxSupply}
-                        minted={minted}
-                        userNFTs={userNFTs}/> : null}
+
                 {isConnected ?
                     <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
                                 signer={signer} userShares={userShares} userWallet={userWallet}
