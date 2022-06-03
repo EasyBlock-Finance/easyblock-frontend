@@ -39,14 +39,19 @@ export default function NftBox(props) {
                     NFTs</Text>
                 {/** NFT COUNT*/}
                 <Text fontSize={20}><b>Owned NFTs:</b> {props.userNftCount}</Text>
-                <Text fontSize="16" pb=".3rem" marginBottom={2}>
+                <Text fontSize="16" pb=".3rem" marginBottom={0}>
                     You can see your NFTs on PaintSwap: <a
                     href={'https://paintswap.finance/marketplace/user'}
                     target={"_blank"}
                     style={{fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer'}}>See all my NFTs</a>
                 </Text>
+                {props.userNFTs.map((item) => <a style={{fontWeight: 'bold', cursor: 'pointer'}}
+                                                    href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item}
+                target={"_blank"}>- The
+                    Easy Club #{item}</a>)}
                 {/** CLAIM REWARDS*/}
-                <Text fontSize={20} marginBottom={2}><b>Claimable Reward:</b> ${(props.claimableReward / 1000000).toFixed(2)}</Text>
+                <Text fontSize={20} marginBottom={2} marginTop={4}><b>Claimable
+                    Reward:</b> ${(props.claimableReward / 1000000).toFixed(2)}</Text>
                 <Button
                     bg={"#FFFFFF"}
                     p="0px"
@@ -75,7 +80,8 @@ export default function NftBox(props) {
 
             <Flex flexDirection={"column"} marginTop={16}>
                 <Text fontSize="32" fontWeight="bold" pb=".3rem" marginTop={0}>Mint NFTs with Shares</Text>
-                <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can turn your shares into NFTs and trade them on
+                <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can turn your shares into NFTs and trade
+                    them on
                     the secondary market. Every The Easy Club NFT
                     can be minted with 50 shares and has a mint cost of 20 FTM. The Easy Club NFTs will receive rewards
                     as normal. Maximum of 20 NFTs can be minted at the same time.</Text>
@@ -138,8 +144,9 @@ export default function NftBox(props) {
 
             <Flex flexDirection={"column"} marginTop={16}>
                 <Text fontSize="32" fontWeight="bold" pb=".3rem" marginTop={0}>Mint NFTs with FTM</Text>
-                <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can also mint The Easy Club NFTs with 100 FTM without shares.
-                NFTs minted without shares won't earn any StrongBlock rewards.</Text>
+                <Text fontSize={14} color={"gray.400"} marginBottom={4}>You can also mint The Easy Club NFTs with 100
+                    FTM without shares.
+                    NFTs minted without shares won't earn any StrongBlock rewards.</Text>
                 <Flex maxWidth={300} flexDirection={"column"}>
                     <Flex marginBottom={4}>
                         <Text fontSize={20} fontWeight={"bold"} marginRight={4}>Mint Count: </Text>

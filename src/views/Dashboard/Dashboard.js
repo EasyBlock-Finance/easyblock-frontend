@@ -200,6 +200,7 @@ export default function Dashboard() {
     const [claimableReward, setClaimableReward] = useState(0);
     const [maxSupply, setMaxSupply] = useState(5000);
     const [minted, setMinted] = useState(0);
+    const [userNFTs, setUserNFTs] = useState([]);
 
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -337,10 +338,17 @@ export default function Dashboard() {
                 setIsAutoCompound(isUserAutoCompound);
 
                 // NFT
-                setUserNftCount(parseInt(await nftContract.balanceOf(walletAddress), 10))
-                console.log("Hey hey");
-                console.log(parseInt(await rewardContractWithSigner.getAllRewards(), 10));
+                let balance = parseInt(await nftContract.balanceOf(walletAddress), 10);
+                setUserNftCount(balance);
+                let userNfts = [];
+                for (let i = 0; i < balance; i++) {
+                    userNfts.push(parseInt(await nftContract.tokenOfOwnerByIndex(walletAddress, i), 10));
+                }
+                console.log("User NFTs");
+                console.log(userNfts);
+                setUserNFTs(userNfts);
                 setClaimableReward(parseInt(await rewardContractWithSigner.getAllRewards(), 10));
+
 
             } else {
                 setIsConnected(false);
@@ -564,7 +572,7 @@ export default function Dashboard() {
         }
     })
 
-    rewardContract.on("Claim", async(address, amount, token, event) => {
+    rewardContract.on("Claim", async (address, amount, token, event) => {
         console.log("Inside event.");
         console.log(event);
         if (event.event === "Claim" && address === await signer.getAddress()) {
@@ -1029,7 +1037,8 @@ export default function Dashboard() {
                         claimRewards={async () => await claimRewards()}
                         NFT_ADDRESS={NFT_ADDRESS}
                         maxSupply={maxSupply}
-                        minted={minted}/> : null}
+                        minted={minted}
+                        userNFTs={userNFTs}/> : null}
                 {isConnected ?
                     <ReferalBox userDataLoading={userDataLoading} easyBlockContract={easyBlockContract}
                                 signer={signer} userShares={userShares} userWallet={userWallet}
