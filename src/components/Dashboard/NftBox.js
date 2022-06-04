@@ -52,7 +52,7 @@ export default function NftBox(props) {
                             flexDirection: 'column',
                             backgroundColor: "#fff",
                             width: window.innerWidth < 960 ? 140 : 160,
-                            height: 180,
+                            height: window.innerWidth < 960 ? 180 : 200,
                             margin: 4,
                             alignItems: 'center',
                             borderRadius: 8,
