@@ -752,7 +752,7 @@ export default function Dashboard() {
                                                 }}><span
                                                     style={{fontWeight: 'bold'}}>Total:</span>
                                                     {generalDataLoading ?
-                                                        <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought) < 1) ? sharePrice : (sharePrice * sharesToBeBought).toFixed(2)}
+                                                        <Spinner/> : (isNaN(parseInt(sharesToBeBought)) || parseInt(sharesToBeBought * 100) < 1) ? sharePrice : (sharePrice * sharesToBeBought * 100).toFixed(2)}
                                                 </Text>
                                                 <Image
                                                     src={'/coins/UsdcLogo.png'}
