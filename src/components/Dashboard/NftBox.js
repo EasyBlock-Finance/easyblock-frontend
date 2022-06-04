@@ -19,7 +19,8 @@ export default function NftBox(props) {
 
     return (
         <Flex width={"100%"} backgroundColor={"gray.700"} borderRadius={8} flexDirection={"column"}
-              padding={window.innerWidth < 960 ? 4 : 8} marginBottom={4} marginTop={8}>
+              padding={window.innerWidth < 960 ? 4 : 8} marginBottom={4} marginTop={8}
+              maxWidth={window.innerWidth - 32}>
             <Text fontSize="48" fontWeight="bold" pb=".3rem" marginBottom={0}>The Easy Club NFTs</Text>
 
             <Text fontSize="16" pb=".3rem" marginBottom={0}>
@@ -50,7 +51,7 @@ export default function NftBox(props) {
                             display: 'flex',
                             flexDirection: 'column',
                             backgroundColor: "#fff",
-                            width: 160,
+                            width: window.innerWidth < 960 ? 140 : 160,
                             height: 180,
                             margin: 4,
                             alignItems: 'center',
@@ -60,12 +61,13 @@ export default function NftBox(props) {
                            href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item.name.slice(15)}
                            target={"_blank"}>
                             <img src={`data:image/svg+xml;base64,${item.image.slice(26)}`}
-                                 style={{width: 140, height: 140}}/>
+                                 style={{width: '100%'}}/>
                             <Text style={{
                                 fontWeight: 'bold',
                                 cursor: 'pointer',
                                 textAlign: 'center',
-                                color: '#000'
+                                color: '#000',
+                                fontSize: window.innerWidth < 960 ? 12 : 16
                             }}>
                                 {item.name}</Text>
                         </a>)}

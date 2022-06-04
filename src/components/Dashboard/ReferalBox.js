@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 export default function ReferalBox(props) {
     return (
         <Flex width={"100%"} backgroundColor={"gray.700"} borderRadius={8} flexDirection={"column"}
-              maxWidth={window.innerWidth < 960 ? "380px" : "unset"}
+              maxWidth={window.innerWidth - 32}
               padding={window.innerWidth < 960 ? 4 : 8} marginBottom={4}>
             <Text fontSize="24" fontWeight="bold" pb=".3rem" marginBottom={0}>Refer Your Friends</Text>
             <Text fontSize={16} color={"gray.400"} marginBottom={4}>You can invite your friends and earn rewards
@@ -21,7 +21,8 @@ export default function ReferalBox(props) {
                     }}>https://strong.easyblock.finance?r={props.userWallet}</a> : "You need to have at least 1 shares to refer"}
             </Text>
 
-            <Text fontSize={20}><b>Total Referral Rewards Distributed: </b>{(0.4608 + props.totalReferralRewards).toFixed(4)} USDC</Text>
+            <Text fontSize={20}><b>Total Referral Rewards
+                Distributed: </b>{(0.4608 + props.totalReferralRewards).toFixed(4)} USDC</Text>
             <Text fontSize={20}><b>Purchases Made with Your Link: </b>{props.referSale}</Text>
             <Text fontSize={20}><b>Your Referral Earnings: </b>{props.referFee.toFixed(4)} $USDC</Text>
         </Flex>

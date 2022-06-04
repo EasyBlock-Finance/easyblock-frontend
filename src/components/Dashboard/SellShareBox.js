@@ -20,7 +20,7 @@ export default function SellShareBox(props) {
     );
     return (
         <Flex width={"100%"} backgroundColor={"gray.700"} borderRadius={8} flexDirection={"column"}
-              padding={window.innerWidth < 960 ? 4 : 8}>
+              padding={window.innerWidth < 960 ? 4 : 8} maxWidth={window.innerWidth - 32}>
             <Text fontSize="24" fontWeight="bold" pb=".3rem" marginBottom={0}>Sell Shares</Text>
             <Text fontSize={14} color={"gray.400"} marginBottom={4}>Selling shares is an experimental function and
                 shouldn't be used to make profits. It's sole purpose is to
