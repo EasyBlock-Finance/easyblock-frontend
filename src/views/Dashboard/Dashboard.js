@@ -655,7 +655,8 @@ export default function Dashboard() {
                         NFT_ADDRESS={NFT_ADDRESS}
                         maxSupply={maxSupply}
                         minted={minted}
-                        userNFTs={userNFTs}/> : null}
+                        userNFTs={userNFTs}
+                    nftContract={nftContract}/> : null}
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
                     templateRows={{md: "1fr auto", lg: "1fr"}}

@@ -1,28 +1,25 @@
 /*eslint-disable*/
-import React, {useState} from "react";
-import {Button, Flex, Input, InputGroup, Spinner, Text} from "@chakra-ui/react";
+import React, {useEffect, useState} from "react";
+import {Button, Flex, Grid, Input, InputGroup, Spinner, Text} from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import {NFT_ADDRESS} from "../../contracts/EasyBlock";
 
 export default function NftBox(props) {
     const [nftToMint, setNftToMint] = useState(1);
     const [nftToMintFtm, setNftToMintFtm] = useState(1);
+    const [parsedNFTs, setParsedNFTs] = useState([]);
 
-    /*
-    // Listeners
-    props.easyBlockContract.on("ShareSold", async (shareAmount, sellAmount, address, event) => {
-            if (event.event === "ShareSold" && address === await props.signer.getAddress()) {
-                setSharesToBeSold(1);
-                setIsSelling(false);
-                window.location.reload();
-                toast.success("Shares sold successfully. Your balance will be updated soon.", {duration: 5000,});
-            }
+    useEffect(async () => {
+        let tmpParsedNFTs = []
+        for (let i = 0; i < props.userNFTs.length; i++) {
+            tmpParsedNFTs.push(JSON.parse(atob((await props.nftContract.tokenURI(props.userNFTs[i])).slice(29))));
         }
-    );
-     */
+        setParsedNFTs(tmpParsedNFTs);
+    }, [props.userNFTs])
+
     return (
         <Flex width={"100%"} backgroundColor={"gray.700"} borderRadius={8} flexDirection={"column"}
-              padding={window.innerWidth < 960 ? 4 : 8} marginBottom={4}>
+              padding={window.innerWidth < 960 ? 4 : 8} marginBottom={4} marginTop={8}>
             <Text fontSize="48" fontWeight="bold" pb=".3rem" marginBottom={0}>The Easy Club NFTs</Text>
 
             <Text fontSize="16" pb=".3rem" marginBottom={0}>
@@ -38,6 +35,7 @@ export default function NftBox(props) {
                 <Text fontSize="32" fontWeight="bold" pb=".3rem" marginTop={0}>My
                     NFTs</Text>
                 {/** NFT COUNT*/}
+                {/*
                 <Text fontSize={20}><b>Owned NFTs:</b> {props.userNftCount}</Text>
                 <Text fontSize="16" pb=".3rem" marginBottom={0}>
                     You can see your NFTs on PaintSwap: <a
@@ -45,10 +43,33 @@ export default function NftBox(props) {
                     target={"_blank"}
                     style={{fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer'}}>See all my NFTs</a>
                 </Text>
-                {props.userNFTs.map((item) => <a style={{fontWeight: 'bold', cursor: 'pointer'}}
-                                                    href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item}
-                target={"_blank"}>- The
-                    Easy Club #{item}</a>)}
+                */}
+                <Grid templateColumns={window.innerWidth < 960 ? 'repeat(2, 1fr)' : 'repeat(6, 1fr)'} gap={4}>
+                    {parsedNFTs.map((item) =>
+                        <a style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            backgroundColor: "#fff",
+                            width: 160,
+                            height: 180,
+                            margin: 4,
+                            alignItems: 'center',
+                            borderRadius: 8,
+                            cursor: 'pointer'
+                        }}
+                           href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item.name.slice(15)}
+                           target={"_blank"}>
+                            <img src={`data:image/svg+xml;base64,${item.image.slice(26)}`}
+                                 style={{width: 140, height: 140}}/>
+                            <Text style={{
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                textAlign: 'center',
+                                color: '#000'
+                            }}>
+                                {item.name}</Text>
+                        </a>)}
+                </Grid>
                 {/** CLAIM REWARDS*/}
                 <Text fontSize={20} marginBottom={2} marginTop={4}><b>Claimable
                     Reward:</b> ${(props.claimableReward / 1000000).toFixed(2)}</Text>
