@@ -656,7 +656,7 @@ export default function Dashboard() {
                         maxSupply={maxSupply}
                         minted={minted}
                         userNFTs={userNFTs}
-                    nftContract={nftContract}/> : null}
+                        nftContract={nftContract}/> : null}
                 <Grid
                     templateColumns={{md: "1fr", lg: "1.2fr 1.8fr"}}
                     templateRows={{md: "1fr auto", lg: "1fr"}}
@@ -943,7 +943,7 @@ export default function Dashboard() {
 
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
-                                                       totalShareCount={totalShareCount} userShares={userShares}
+                                                       totalShareCount={totalShareCount} userShares={userShares + userNftCount * 50}
                                                        reward={wallet1Strong}
                                                        name={"Wallet 1"}
                                                        distributionDate={"May 31"}
@@ -953,14 +953,14 @@ export default function Dashboard() {
                                     {showWalletDetails ?
                                         <>
                                             <UserWalletRewards userDataLoading={userDataLoading}
-                                                               totalShareCount={totalShareCount} userShares={userShares}
+                                                               totalShareCount={totalShareCount} userShares={userShares + userNftCount * 50}
                                                                reward={wallet2Strong}
                                                                name={"Wallet 2"}
                                                                distributionDate={"June 10"}
                                                                strongPrice={strongPrice}
                                             />
                                             <UserWalletRewards userDataLoading={userDataLoading}
-                                                               totalShareCount={totalShareCount} userShares={userShares}
+                                                               totalShareCount={totalShareCount} userShares={userShares + userNftCount * 50}
                                                                reward={wallet3Strong}
                                                                name={"Wallet 3"}
                                                                distributionDate={"June 20"}
@@ -1022,16 +1022,16 @@ export default function Dashboard() {
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>May 31, 2022<br/>
+                                    }}>Next Reward Distribution:<br/>To Be Announced<br/>
                                         <span
-                                            style={{fontWeight: 'normal', fontSize: 14}}>Your share from the generated revenue will be directly deposited into your wallet every 5 days.</span>
+                                            style={{fontWeight: 'normal', fontSize: 14}}>Because of the low price of $STRNGR the distribution couldn't happen at the moment because the gas fees to claim outweigh the rewards.</span>
                                         <br/>
-                                        {userDataLoading ? <Spinner/> :
+                                        {/*userDataLoading ? <Spinner/> :
                                             <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
                                                 <b>Estimated Amount:</b> ${totalShareCount === 0 ? 0
                                                 : calculateEstimatedRewardsSingle(wallet1Strong) > (calculateCurrentRewardSingle(wallet1Strong))
                                                     ? calculateEstimatedRewardsSingle(wallet1Strong).toFixed(2)
-                                                    : (calculateCurrentRewardSingle(wallet1Strong)).toFixed(2)}</span>}
+                                                    : (calculateCurrentRewardSingle(wallet1Strong)).toFixed(2)}</span>*/}
                                     </Text>
 
                                 </Flex>

@@ -36,7 +36,7 @@ export default function UserWalletRewards(props) {
                             fontWeight="bold"
                             pb=".1rem"
                         >
-                            {props.name} Revenue <br/>(Distribution: {props.distributionDate})
+                            {props.name} Revenue <br/>(Distribution: {/*props.distributionDate*/"TBA"})
                         </StatLabel>
                         <Flex>
                             <StatNumber fontSize="lg" color={"gray.600"}
