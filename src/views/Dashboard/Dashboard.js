@@ -254,6 +254,12 @@ export default function Dashboard() {
             }
 
         });
+        setWallet1Strong(66.5419 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*100);
+        setWallet2Strong(107.1869 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*100);
+        setWallet3Strong(101.9777 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*100);
+        setWallet4Strong(44.7447 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*35);
+        setPriceLoading(false);
+        /*
         // Wallet 1
         fetch('https://openapi.debank.com/v1/user/protocol?id=0xde6f949cec8ba92a8d963e9a0065c03753802d14&protocol_id=strongblock').then(response => response.json()).then(data => {
                 try {
@@ -297,7 +303,7 @@ export default function Dashboard() {
                 } catch (e) {
                 }
             }
-        );
+        );*/
     }
 
     async function connectAndGetUserData() {
