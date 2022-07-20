@@ -254,10 +254,10 @@ export default function Dashboard() {
             }
 
         });
-        setWallet1Strong(66.5419 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*100);
-        setWallet2Strong(107.1869 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*100);
-        setWallet3Strong(101.9777 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*100);
-        setWallet4Strong(44.7447 + (Date.now()- 1658273203000)/1000/60/60/24 * 0.075*35);
+        setWallet1Strong(66.5419 + (Date.now() - 1658273203000) / 1000 / 60 / 60 / 24 * 0.075 * 100);
+        setWallet2Strong(107.1869 + (Date.now() - 1658273203000) / 1000 / 60 / 60 / 24 * 0.075 * 100);
+        setWallet3Strong(101.9777 + (Date.now() - 1658273203000) / 1000 / 60 / 60 / 24 * 0.075 * 100);
+        setWallet4Strong(44.7447 + (Date.now() - 1658273203000) / 1000 / 60 / 60 / 24 * 0.075 * 35);
         setPriceLoading(false);
         /*
         // Wallet 1
@@ -949,7 +949,8 @@ export default function Dashboard() {
 
 
                                     <UserWalletRewards userDataLoading={userDataLoading}
-                                                       totalShareCount={totalShareCount} userShares={userShares + userNftCount * 50}
+                                                       totalShareCount={totalShareCount}
+                                                       userShares={userShares + userNftCount * 50}
                                                        reward={wallet1Strong}
                                                        name={"Wallet 1"}
                                                        distributionDate={"May 31"}
@@ -959,14 +960,16 @@ export default function Dashboard() {
                                     {showWalletDetails ?
                                         <>
                                             <UserWalletRewards userDataLoading={userDataLoading}
-                                                               totalShareCount={totalShareCount} userShares={userShares + userNftCount * 50}
+                                                               totalShareCount={totalShareCount}
+                                                               userShares={userShares + userNftCount * 50}
                                                                reward={wallet2Strong}
                                                                name={"Wallet 2"}
                                                                distributionDate={"June 10"}
                                                                strongPrice={strongPrice}
                                             />
                                             <UserWalletRewards userDataLoading={userDataLoading}
-                                                               totalShareCount={totalShareCount} userShares={userShares + userNftCount * 50}
+                                                               totalShareCount={totalShareCount}
+                                                               userShares={userShares + userNftCount * 50}
                                                                reward={wallet3Strong}
                                                                name={"Wallet 3"}
                                                                distributionDate={"June 20"}
@@ -995,13 +998,9 @@ export default function Dashboard() {
                                     }}>Show Less</p> : null}
 
                                     <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                                        (*) This is the reward accumulated from Strongblock but not yet claimed
-                                        and
-                                        distributed.
-                                        We currently have 4 wallets holding the nodes and rewards from 3 of them are
-                                        distributed every 10 days one after another. These amounts keep growing
-                                        as time
-                                        passes.
+                                        (*) This is the reward accumulated from Strongblock but not yet claimed and
+                                        distributed. Remember that the distributed amount can be lower because of
+                                        Strongblock's claim and maintenance fees.
                                     </Text>
                                     <Spacer/>
 
@@ -1023,14 +1022,14 @@ export default function Dashboard() {
                                     />
                                     <Text style={{
                                         marginBottom: 16,
-                                        fontWeight: "bold",
                                         fontSize: 16,
                                         color: "#3e68a4",
                                         marginTop: 8,
                                         textAlign: 'center',
-                                    }}>Next Reward Distribution:<br/>To Be Announced<br/>
+                                    }}><b>Next Reward Distribution:</b><br/>To Be Announced<br/>
                                         <span
-                                            style={{fontWeight: 'normal', fontSize: 14}}>Because of the low price of $STRNGR the distribution couldn't happen at the moment because the gas fees to claim outweigh the rewards.</span>
+                                            style={{fontWeight: 'normal', fontSize: 14}}>{/*Because of the low price of $STRNGR the distribution couldn't happen at the moment because the gas fees to claim outweigh the rewards.*/}
+                                        </span>
                                         <br/>
                                         {/*userDataLoading ? <Spinner/> :
                                             <span style={{fontSize: 20, marginTop: 16, fontWeight: 'normal'}}>
